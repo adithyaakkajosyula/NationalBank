@@ -1,0 +1,33 @@
+﻿@model AdithyaBank.BackEnd.Models.ApplicationGetModel
+<div class="row">
+                <div class="col-md-4 pr-2 text-right">
+                    <label>Application Name / Mobile Number :</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control autocomplete" asp-for="ApplicationName" placeholder="Search by Name or Mobile">
+                    <input type="hidden" asp-for="Id" />
+                    <span asp-validation-for="ApplicationName" class="text-danger"></span><br />
+                    <span class="text-danger" id="listmessage"></span>
+                </div>
+</div>
+    @section styles
+    {
+
+    <link href="~/lib/Typeahead/typeahead.css" rel="stylesheet" />
+
+
+}
+
+@section scripts{
+    <script> 
+        System.import('jqueryauto').then(function () {
+            System.import('Autocomplete').then(function () {
+                    System.import('applicationdetails').then(function (w) {
+                        var ward = new w.GetApplicationDetails();
+                        ward.InitOnload();
+                    }).catch(function (err) { console.error(err); });
+            }).catch(function (err) { console.error(err); });
+        }).catch(function (err) { console.error(err); });
+    </script>
+
+}

@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AdithyaBank.BackEnd.Models
+{
+    public class AppSettings
+    {
+        public string IdentityAuthority { get; set; }
+
+        public string DatabaseConnectionString { get; set; }
+
+        public string ApplicationDataDbConnectionString { get; set; }
+
+        public string CMSDbConnectionString { get; set; }
+
+        public string Organization { get; set; }
+
+        public string ImagesPath { get; set; }
+
+        public int ConnectionTimeout { get; set; }
+
+        public JWT JWT { get; set; }    
+    }
+    public class JWT
+    {
+        public string ValidAudience { get; set; }
+        public string ValidIssuer { get; set; }
+        public string Secret { get; set; }
+    }
+}

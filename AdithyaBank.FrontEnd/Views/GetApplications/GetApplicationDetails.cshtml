@@ -1,0 +1,149 @@
+﻿@model AdithyaBank.BackEnd.Models.ApplicationGetModel
+
+
+<div class="card">
+    <div class="card-header">
+        Application
+    </div>
+    <div class="card-body">
+        <form asp-action="" method="post">
+            <div class="row">
+                <div class="col-md-4 pr-2 text-right">
+                    <label>Application Name / Mobile Number :</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control autocomplete" asp-for="ApplicationName" placeholder="Search by Name or Mobile">
+                    <input type="hidden" asp-for="Id" />
+                    <span asp-validation-for="ApplicationName" class="text-danger"></span><br />
+                    <span class="text-danger" id="listmessage"></span>
+                </div>
+            </div>
+            <div id="divcontainer">                          
+                <div class="card mt-5">
+                    <div class="card-header">
+                        Application Details
+                    </div>
+                    <div class="card-body">
+                        <div class="row row-cols-2">
+                            <div class="col">
+                              <strong>Application Name  :</strong> <label id="getapplicationname"></label>
+                            </div>
+                             <div class="col">
+                                <strong> Application Registerdate  : </strong> <label id="getApplicationRegisterdate"></label>
+                            </div>
+                            <div class="col">
+                              <strong> Application mobile  : </strong> <label id="getApplicationmobile"></label>
+                            </div>
+                            <div class="col">
+                               <strong>  Application RequestedAmount : </strong> <label id="getApplicationRequestedAmount"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-5">
+                    <div class="card-header">
+                        Loan Details
+                    </div>
+                    <div class="card-body">
+                        <div class="row offset-md-2">
+                           <div class="input-group p-2">
+                               <label class="col-md-2">Loan Amount</label>
+                               <div class="col-md-2">
+                                   <input asp-for="LoanDetails.LoanAmount" class="form-control" />
+                                   <span asp-validation-for="LoanDetails.LoanAmount" class="text-danger"></span>
+                               </div>                              
+                           </div>
+                            <div class="input-group p-2">
+                               <label class="col-md-2">Loan Date</label>                              
+                               <div class="col-md-2">
+                                   <div class="selectdate">
+                                        <input type="text" class="form-control" asp-for="LoanDetails.LoanDate" asp-format="{0:dd-MMM-yyyy}" readonly />
+                                   </div>
+                                   <span asp-validation-for="LoanDetails.LoanDate" class="text-danger"></span>
+                               </div>                              
+                           </div>
+                           <div class="input-group p-2">
+                               <label class="col-md-2">Loan Interest</label>
+                               <div class="col-md-2">
+                                   <input asp-for="LoanDetails.Interest" class="form-control" />
+                                   <span asp-validation-for="LoanDetails.Interest" class="text-danger"></span>
+                               </div>                              
+                           </div>
+                            <div class="input-group p-2">
+                                 <label class="col-md-2">Product</label>
+                                 <div class="col-md-2">
+                                     <select asp-for="LoanDetails.ProductId" class="form-select" asp-items="@(new SelectList(Model.LoanDetails.Products,"Id","Name"))">
+                                            <option value="0">Select</option>
+                                     </select>
+                                     <span asp-validation-for="LoanDetails.ProductId" class="text-danger"></span>
+                                 </div>                               
+                            </div>
+                            <div class="input-group p-2">  
+                                <label class="col-md-2">Frequency</label>
+                                <div class="col-md-2">
+                                    <select asp-for="LoanDetails.Frequency" class="form-select">
+                                        <option value="0">Select</option>
+                                        <option value="M">Monthly</option>
+                                        <option value="Q">Quaterly</option>
+                                        <option value="H">Halferly</option>
+                                        <option value="Y">Yearly</option>
+                                    </select>
+                                    <span asp-validation-for="LoanDetails.Frequency" class="text-danger"></span>
+                                </div>                                
+                           </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="float-lg-end">
+                        <input type="submit" class="btn-primary float-md-end" value="Save" />
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </form>           
+    </div>
+</div>
+
+@section styles{
+
+    #overlay {
+    pointer-events: auto; /* Enable pointer events */
+}
+
+.overlay-active {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    pointer-events: none; /* Disable pointer events */
+}
+}
+
+@section scripts{
+   
+    <script>
+        
+         SystemJS.import('jquery').then(function () {
+            System.import('jqueryauto').then(function () {
+               System.import('Autocomplete').then(function () {
+                   SystemJS.import('moment').then(function () {
+                       SystemJS.import('bootstrap-datepicker').then(function () {
+                            SystemJS.import('GetApplications').then(function (l) {
+                                var loan = new l.GetApplications();
+                                loan.InitOnLoad();
+                            }).catch(function (err) { console.error(err); });
+                       }).catch(function (err) { console.error(err); });
+                   }).catch(function (err) { console.error(err); });
+               }).catch(function (err) { console.error(err); });
+            }).catch(function (err) { console.error(err); });
+         }).catch(function (err) { console.error(err); });
+                   
+    </script>
+   
+}

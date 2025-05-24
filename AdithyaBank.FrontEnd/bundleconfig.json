@@ -1,0 +1,36 @@
+[
+  {
+    "outputFileName": "wwwroot/css/site.min.css",
+    "inputFiles": [
+      "wwwroot/css/site.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/js/system.min.js",
+    "inputFiles": [
+      "wwwroot/js/system.js",
+      "wwwroot/js/systemjs.config.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/js/site.min.js",
+    "inputFiles": [
+      "wwwroot/lib/sidebar.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+]
+
+ //* 
+ //* It is a mapping between the generated/transpiled/minified JavaScript file and one or more original source files. 
+ //* The main purpose of Sourcemaps is to aid debugging. If there is an error in the generated code file,
+ //* the map can tell you the original source file location. That's it.

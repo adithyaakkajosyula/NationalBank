@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@*<div class="row">
+    <audio controls autobuffer="autobuffer" autoplay="autoplay">
+                <source src="~/images/master.mp3" type='audio/mp3'>
+    </audio>
+</div>*@
+
+@*@model List<AdithyaBank.BackEnd.Models.AudioModel>
+
+
+<h1>PlaylistContents</h1>*@
+
+@*<table class="table">
+
+    <tr>
+        <td>
+             <audio controls class="w-100">
+            <source
+              src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3"
+              type="audio/mpeg"
+            />
+            <source
+              src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.ogg"
+              type="audio/ogg"
+            />
+            <source
+              src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.wav"
+              type="audio/wav"
+            />
+            Audio not supported
+          </audio>
+        </td>
+    </tr>
+    @foreach (var item in Model)
+    {
+        
+        <tr>
+            <td> 
+                <article class="audio">
+                    <audio  controls class="w-100">
+                        <source src="@item.base64"/>
+                    </audio>
+                </article>
+            </td>
+            <td>
+                @item.songname
+            </td>
+        </tr>
+    }
+    <source src="https://moctobpltc-i.akamaihd.net/hls/live/571329/eight/playlist.m3u8" type="application/x-mpegURL">
+</table>*@
+@*
+ <video id="movie"  class="video-js vjs-fluid vjs-default-skin" controls preload="auto"
+      data-setup='{"controls":true,"loop":true,"preload":"auto"}'>
+     <source src="https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8" type="application/x-mpegURL">
+            <!-- HERE THE CODE FOR THE ALTERNATIVE PLAYER (FLASH) WILL BE! -->
+ </video>
+       <link href="https://vjs.zencdn.net/7.11.4/video-js.css" rel="stylesheet"/>
+  <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mux.js/5.10.0/mux.min.js"></script>
+    <script>
+    var player = videojs('movie');
+    player.play();
+    </script>*@
+     
+@*<script>
+    document.addEventListener('play', function(e) {
+    var audios = document.getElementsByTagName('audio');
+
+    for (var i = 0, len = audios.length; i < len; i++) {
+        if (audios[i] != e.target) {
+            audios[i].pause();
+        }
+    }
+}, true);
+</script>*@
+
+
+@model AdithyaBank.BackEnd.Models.UserModel
+
+@*get user by custom authorization attribute*@
+<p>Current loged in user @Model.Username</p>
+

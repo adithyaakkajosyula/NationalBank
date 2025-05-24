@@ -1,0 +1,38 @@
+﻿@model AdithyaBank.BackEnd.Models.AuthenticateRequest
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_LoginLayout";
+}  
+  
+<form asp-action="Login"  method="post">
+    <div class="row">
+            <div class="mx-auto" style="width: 400px;" >
+                <div class="col-md-12">
+               <div class="bg-light">
+                   <input type="hidden" asp-for="ReturnUrl" />
+                <div class="d-flex align-items-center justify-content-evenly bg-black text-bg-success py-3">
+                   <h3 style="color:aqua;font-size:xx-large">LOGIN</h3>
+                </div>
+                <div class="form-group row pt-3">
+                    <div class="d-flex">
+                        <input asp-for="Username" class="form-control" placeholder="Enter User Name"/>                        
+                    </div>
+                </div>
+                <span asp-validation-for="Username" class="text-danger"></span>
+                <div class="form-group row">
+                    <div class="d-flex">
+                        <input asp-for="Password" class="form-control" placeholder="Enter Password"/>                      
+                    </div>
+                </div>
+                 <span asp-validation-for="Password" class="text-danger"></span>
+                <div class="d-flex align-items-center justify-content-evenly">
+                    <input type="submit" class="btn btn-success flex-lg-fill" value="Login"/>                        
+                </div>
+               </div>                   
+                </div>
+
+                <a asp-action="Create" asp-controller="UserLogin">User Register</a>
+            </div>
+        </div>
+
+</form>               

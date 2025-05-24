@@ -1,0 +1,55 @@
+﻿
+@model AdithyaBank.BackEnd.Models.RegisterModel
+@{
+    ViewData["Title"] = "CREATE USER";
+    Layout = "_LoginLayout";
+}  
+
+<form asp-action="Create"  method="post">
+    <div class="row">
+            <div class="mx-auto" style="width: 400px;" >
+                <div class="col-md-12">
+               <div class="bg-light">
+                        <div class="d-flex align-items-center justify-content-evenly bg-black text-bg-success py-3">
+                           <h3 style="color:aqua;font-size:xx-large">NEW USER</h3>
+                        </div>
+
+                        <div class="form-group row pt-3">
+                            <div class="d-flex">
+                                <input asp-for="Username" class="form-control" placeholder="Enter User Name"/>                        
+                            </div>
+                        </div>
+               
+                        <div class="form-group row">
+                            <div class="d-flex">
+                                <input asp-for="Email" class="form-control" placeholder="Enter Email"/>                        
+                            </div>
+                        </div>
+               
+                        <div class="form-group row">
+                            <div class="d-flex">
+                                <input asp-for="Password" class="form-control" placeholder="Enter Password"/>                      
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <div class="d-flex">
+                                <select asp-for="RoleId" class="form-select" placeholder="Enter Password" asp-items="@(new SelectList(Model.Roles,"Id","Name"))">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-evenly">
+                            <input type="submit" class="btn btn-success flex-lg-fill" value="Create"/>                        
+                        </div>
+               </div>                   
+                </div>
+
+                <a asp-action="Login" asp-controller="UserLogin" asp-route-returnUrl="/">Login</a>
+                <div asp-validation-summary="All" class="text-danger"></div>
+            </div>
+        </div>
+
+</form>
+

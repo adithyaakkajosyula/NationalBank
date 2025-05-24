@@ -1,0 +1,96 @@
+﻿@using AdithyaBank.BackEnd.Models;
+
+@{
+    var alert = TempData.GetAlerts();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AdithyaBank.FrontEnd</title>
+   <environment include="Development">
+        <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+    </environment>
+    <environment exclude="Development">
+        <link href="~/css/site.min.css" rel="stylesheet" asp-append-version="true" />
+    </environment>
+
+     @RenderSection("styles", required: false)
+</head>
+<body>
+    <partial name="_HeaderPartial"></partial>
+    <partial name="_SidebarPatial"></partial>
+    <main class="main" style="background-color:lightgrey">
+        <nav class="d-flex">
+                <h5 class="card-title">Home Page</h5>
+                <ol class="breadcrumb ms-auto mt-2">
+                    <li class="breadcrumb-item"><a>Home</a></li>
+                    <li class="breadcrumb-item active "><a>DashBoard</a></li>
+                </ol>
+        </nav>
+        <hr>
+        <div>
+                @{
+                    if (alert.Any())
+                    {
+                        var alerts = alert.First();
+                                    <div>
+                                        <div class="alert @alerts.AlertClass alert-dismissible">
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                            @alerts.Message
+                                        </div>
+                                    </div>
+                    }
+                         <h3>@ViewData["time"]</h3> 
+                }
+            </div>
+        <section class="section dashboard mb-5">
+            <div id="mainbody">
+                 @RenderBody()
+            </div>
+        </section>
+               
+        @* <a href="#" class="back-to-top d-flex align-items-center justify-content-center active"><i class="bi bi-arrow-up-short"></i></a>*@
+    </main>
+
+    <footer class="border-top footer text-muted fixed-bottom">
+        <div class="container">
+            &copy; 2023 - AdithyaBank.FrontEnd - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    @*<script type="systemjs-importmap" src="~/js/imports.json" crossorigin="anonymous"></script>
+    <script src="~/js/system.js"></script>
+    <script src="~/js/amd.min.js"></script>*@
+
+  <script src="~/js/system.min.js" asp-append-version="true"></script>
+    <script>
+      System.import('jquery').then(function () {     
+           System.import('bootstrap').then(function () {                
+               System.import('jquery-validation').then(function () {
+                    System.import('jquerazaxunobtrusive').then(function () {
+               System.import('jqueryunob').then(function () {
+                   (function ($) {
+            $.validator.unobtrusive.adapters.addBool("checkboxrequired", "required");
+        }(jQuery));
+               System.import('site').then(function () {
+                    System.import('typeahead-jquery').then(function () {
+                         System.import('typeahead-bundle').then(function () {
+                              System.import('bloodhound').then(function () {
+                                    System.import('sweetalert2').then(function () {
+                  
+                                    }).catch(function (err) { console.error(err); });
+                              }).catch(function (err) { console.error(err); });
+                         }).catch(function (err) { console.error(err); });
+                    }).catch(function (err) { console.error(err); });
+                    }).catch(function (err) { console.error(err); });
+                    }).catch(function (err) { console.error(err); });
+                     }).catch(function (err) { console.error(err); });
+                     }).catch(function (err) { console.error(err); });
+      }).catch(function (err) { console.error(err); });
+       }).catch(function (err) { console.error(err); });
+    </script>
+   @RenderSection("Scripts", required: false)
+</body>
+</html>

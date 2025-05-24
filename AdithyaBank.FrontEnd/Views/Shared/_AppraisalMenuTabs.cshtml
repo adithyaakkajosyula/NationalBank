@@ -1,0 +1,89 @@
+﻿@model AppriasalMenuTabModel
+@using AdithyaBank.BackEnd.Extensions;
+@using AdithyaBank.BackEnd.RepoInterfaces;
+@using Microsoft.AspNetCore.Mvc;
+@inject AdithyaBank.BackEnd.RepoInterfaces.ICommonRepository commonRepository;
+
+@{
+    Layout = null;
+   // var tabDisplayModel = TempData.Get<AdithyaBank.BackEnd.Models.ApplicationTabDisplayModel>("display");
+    long appraisalId = commonRepository.Decrypt<long>(Model.AppraisalId);
+  //  var tobeHiddenAppraisalTabs = appraisalRepository.GetAppraisalHiddenTabs(appraisalId).GetAwaiter().GetResult();
+
+    bool IsForAdminViewOnly = false;
+    if (TempData.ContainsKey("AdminForDisplayOnly"))
+    {
+        IsForAdminViewOnly = Convert.ToBoolean(TempData.Peek("AdminForDisplayOnly"));
+    }
+
+
+}
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Appraisal?"active":null)" asp-action="Appraisal" asp-controller="Appraisal" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType asp-route-viewOnly="@(TempData.ContainsKey("AdminForDisplayOnly")?Convert.ToBoolean(TempData.Peek("AdminForDisplayOnly")):false )"><i style="font-size: 2rem; color: #f87d93;" class="bi bi-person"></i> Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Address?"active":null) @(appraisalId==0?"disabled":null)" asp-action="AddAddressDetails" asp-controller="AppraisalAddressDetails" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #d3f87d; " class="bi bi-geo-alt"></i> Address</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.FamilyDetails?"active":null) @(appraisalId==0?"disabled":null)" asp-action="AddFamilyDetails" asp-controller="AppraisalFamilyDetails" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #f8e97d;" class="bi bi-people"></i> Family Details</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.KycDetail?"active":null) @(appraisalId==0?"disabled":null)" asp-action="AddKYCDetails" asp-controller="AppraisalKYCDetails" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #f8af7d;" class="bi bi-person-badge"></i> KYC</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.NomineeDetail?"active":null) @(appraisalId==0?"disabled":null)" asp-action="AddNomineeDetails" asp-controller="AppraisalNomineeDetails" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #7df8af;" class="bi bi-file-earmark-person"></i> Nominee</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.CoApplicant?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalCoApplicant" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #f87dad;" class="bi bi-person-plus"></i> Profile - Others</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.BusinessInfo?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalBussinessInfo" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #7dcff8;" class="bi bi-cash-stack"></i> Bussiness</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.SalesInfo?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalSalesInfo" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #7da6f8;" class="bi bi-receipt"></i> Sales</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.OtherIncome?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalOtherIncomeInfo" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #f87de7;" class="bi bi-wallet2"></i> Other Income</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.IncomeInfo?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalIncomeInfo" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #c07df8;" class="bi bi-cash-stack"></i> Income & Expenditure</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Liabilities?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalLiabilities" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #c07df8;" class="bi bi-wallet"></i> Liabilities</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.BankInfo?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalBankInfo" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #111415;" class="bi bi-bank"></i> Bank</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Collateral1?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Collateral1" asp-controller="AppraisalCollateralDetails" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #c022ef;" class="bi bi-credit-card-2-back"></i> Collateral</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Collateral2?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Collateral2" asp-controller="AppraisalCollateralDetails" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #c022ef;" class="bi bi-credit-card-2-back"></i> Document-2</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Collateral3?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Collateral3" asp-controller="AppraisalCollateralDetails" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #c022ef;" class="bi bi-credit-card-2-back"></i> Document-3</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Collateral4?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Collateral4" asp-controller="AppraisalCollateralDetails" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #c022ef;" class="bi bi-credit-card-2-back"></i> Document-4</a>
+    </li>
+    <li class="nav-item d-none">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.LoanRequest?"active":null) @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalLoanRequest" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #c022ef;" class="">₹</i> Loan Request</a>
+    </li>
+    <li class="nav-item ">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Documents?"active":null) @(appraisalId==0?"disabled":null)" asp-action="UploadNew" asp-controller="AppraisalDocuments" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #f5098a;" class="bi bi-upload"></i> Uploads</a>
+    </li>
+  @*  <li class="nav-item @(tabDisplayModel.Completion || IsForAdminViewOnly?"d-block":"d-none")">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Completion?"active":null)  @(appraisalId==0?"disabled":null)" asp-action="Completed" asp-controller="Appraisal" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #09f50d;" class="bi bi-award"></i> Review & Finish</a>
+    </li>
+    <li class="nav-item @(tabDisplayModel.ForwordToCB || IsForAdminViewOnly?"d-block":"d-none")">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.ForwordToCB?"active":null)  @(appraisalId==0?"disabled":null)" asp-action="ForwordToCB" asp-controller="AppraisalCreditBureau" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #fc0091;" class="bi bi-arrow-right-circle"></i> PDV Authentication</a>
+    </li>
+    <li class="nav-item @(tabDisplayModel.AppraisalAnalyst|| IsForAdminViewOnly?"d-block":"d-none")">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.AppraisalAnalyst?"active":null)  @(appraisalId==0?"disabled":null)" asp-action="Add" asp-controller="AppraisalOtherInformation" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #fc0091;" class="bi bi-pencil-square"></i> LER Inputs</a>
+    </li>
+    <li class="nav-item @(tabDisplayModel.Televerification|| IsForAdminViewOnly?"d-block":"d-none")">
+        <a class="nav-link @(Model.TabFor==AppraisalTabFor.Televerification?"active":null)  @(appraisalId==0?"disabled":null)" asp-action="GetQuestions" asp-controller="AppraisalTeleverification" asp-route-id=@Model.AppraisalId asp-route-screenType=@Model.ScreenType><i style="font-size: 2rem; color: #fc0091;" class="bi bi-telephone-forward"></i> TeleVerification</a>
+    </li>*@
+</ul>

@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.base",
+  "compileOnSave": true,
+  "compilerOptions": {
+    "outFile": "../../wwwroot/js/applicationdetails.js"
+  }
+}

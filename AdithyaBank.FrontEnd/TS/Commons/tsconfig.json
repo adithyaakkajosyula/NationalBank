@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base",
+  "compileOnSave": true,
+  "compilerOptions": {
+    "declaration": true,
+    "baseUrl": "app",
+    "paths": {
+      "commons": [ "./" ]
+    },
+    "outFile": "../../wwwroot/js/commons.js"
+  }
+}

@@ -1,0 +1,239 @@
+﻿@model List<AdithyaBank.BackEnd.Models.ApplicationRegisterModel>
+@using AdithyaBank.BackEnd.Models
+@{
+     decimal paidtotal = 0;
+}
+   <div class="card">
+       <form>
+           <table class="table table-primary maintableclass">
+               <thead>
+                   <tr>
+                          <label class="float-end" id="count">Total Count : @Model.Count</label>
+                   </tr>
+                   <tr>
+                        <th class="d-none"></th>
+                         <th><input class="form-check-input"  id="appraisalselectall" type="checkbox" /></th>
+                        <th>Name</th>
+                        <th>Father Name</th>
+                        <th>Mother Name</th>
+                        <th>DOB</th>
+                        <th>Gender</th>
+                        <th>Qualification</th>
+                        <th>Martial Status</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Document Type</th>
+                        <th>File Upload</th>
+                        <th>View/Download</th>
+                        <th>Requested Amount</th>
+                        <th>Hobbies</th>
+                        <th>Register Date</th>
+                        <th>Address</th>
+                        <th>Country</th>
+                        <th>State</th>
+                        <th>District</th>
+                        <th>Status</th>
+                        <th><button class="btn btn-primary" id="addappraisalrow" type="button">Add</button></th>
+                   </tr>
+               </thead>
+                <tbody class="maintbodyclass">
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td class="d-none"><input class="appraisalid" hidden="hidden" asp-for="@Model[i].Id"/> <span class="error-message" style="display:none;"></span></td>
+                            <td><input type="checkbox" value="false" class="form-check-input productidclass" /> <span class="error-message" style="display:none;"></span></td>
+                            <td><input type="text" class="form-control applicationName" asp-for="@Model[i].ApplicationName" /> <span class="error-message" style="display:none;"></span></td>
+                            <td><input type="text" class="form-control applicationfathername" asp-for="@Model[i].ApplicationFatherName"/> <span class="error-message" style="display:none;"></span></td>
+                            <td><input type="text" class="form-control applicationmothername" asp-for="@Model[i].ApplicationMotherName"/> <span class="error-message" style="display:none;"></span></td>
+                            <td>
+                                <div class="selectdate">
+                                    <input type="text" class="form-control datepicker applicationdob" asp-for="@Model[i].ApplicationDob" asp-format="{0:dd-MMM-yyyy}" readonly />
+                                </div>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <div class="radio radio-inline radio-info">
+                                    <input type="radio" id="@("verified"+i)" class="isverified applicationgender" asp-for="@Model[i].ApplicationGender" value="M"/>
+                                    <label for="@("verified"+i)">Male</label>
+                                    <input type="radio" id="@("notverified"+i)" class="isverified applicationgender" asp-for="@Model[i].ApplicationGender" value="F"/>
+                                    <label for="@("notverified"+i)">Female</label>
+                                </div>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <select class="form-select applicationqualification" asp-for="@Model[i].ApplicationQualification" asp-items="@(Html.GetEnumSelectList<Enums.ApplicationQualifications>().Where(c=>c.Value.Equals("1") || c.Value.Equals("2") || c.Value.Equals("3") || c.Value.Equals("4")|| c.Value.Equals("5")|| c.Value.Equals("6") || c.Value.Equals("7") || c.Value.Equals("8")).Select(si=>{si.Value=((Enums.ApplicationQualifications)int.Parse(si.Value)).ToString(); return si;}))">
+                                    <option value="" >Select</option>
+                                </select>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <select class="form-select applicationMartialStatus" asp-for="@Model[i].ApplicationMartialStatus">
+                                    <option value="">Select</option>
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                </select>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control applicationmobile" asp-for="@Model[i].ApplicationMobile" data-validation="phone">
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control applicationemail" asp-for="@Model[i].ApplicationEmail" data-validation="email">
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <select class="form-select applicationDocumentTypeId" asp-for="@Model[i].ApplicationDocumentTypeId" asp-items="@(new SelectList(Model[i].ApplicantDocumentTypes,"Id","Name"))">
+                                    <option value="">Select</option>
+                                </select>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <i class="bi bi-file-arrow-up uploadIcon"></i>
+                                <input class="fileinput" hidden accept=".pdf,.jpg,.jpeg" type="file" asp-for="@Model[i].DocumentFile">
+                                 <span class="error-message" style="display:none;"></span>
+                               
+                            </td>
+                            <td>
+                                @{
+                                    if(@Model[i].ApplicationDocumentUploadModel != null){
+                                             <a href="@Url.Action("ViewFile", "Appraisal", new { id = @Model[i].Id,documentid = @Model[i].ApplicationDocumentUploadModel.DocumnentUploadId })" target="_blank">View File</a>
+                                        <a href="@Url.Action("DownLoadFile", "Appraisal", new { id = @Model[i].Id,documentid = @Model[i].ApplicationDocumentUploadModel.DocumnentUploadId })">DownLoad File</a>
+                                        <i  class="bi bi-file-arrow-down downloadfilebyclientside" data-id="@Model[i].Id" data-documentid="@Model[i].ApplicationDocumentUploadModel.DocumnentUploadId">Download from client</i>
+                                        <i  class="bi bi-file-arrow-down viewfilebyclientside" data-id="@Model[i].Id" data-documentid="@Model[i].ApplicationDocumentUploadModel.DocumnentUploadId">View from client</i>
+                                        <span class="error-message" style="display:none;"></span>
+                                    }                                   
+                                 }
+                                
+                            </td>
+                            <td>
+                                <input type="text" class="form-control applicationRequestedAmount" asp-for="@Model[i].ApplicationRequestedAmount">
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <select class="form-select applicationHobbies" asp-for="@Model[i].ApplicationHobbies" asp-items="@(Html.GetEnumSelectList<Enums.ApplicantHobbies>().Where(c=>c.Value.Equals("1") || c.Value.Equals("2") || c.Value.Equals("3") || c.Value.Equals("4")|| c.Value.Equals("5")|| c.Value.Equals("6") || c.Value.Equals("7") || c.Value.Equals("8")).Select(si=>{si.Value=((Enums.ApplicantHobbies)int.Parse(si.Value)).ToString(); return si;}))" multiple>
+                                </select>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <div class="selectdate">
+                                    <input type="text" class="form-control datepicker applicationRegisterdate" asp-for="@Model[i].ApplicationRegisterDate" asp-format="{0:dd-MMM-yyyy}" readonly />
+                                     <span class="error-message" style="display:none;"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <textarea type="text" class="form-control applicationAddress" asp-for="@Model[i].ApplicationAddress"></textarea>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <div>
+                                    <input type="text" class="form-control autocomplete applicationcountryname" asp-for="@Model[i].ApplicationCountryName" placeholder="Search by Name">
+                                    <input type="hidden" class="applicationCountryId" asp-for="@Model[i].ApplicationCountryId" />
+                                     <span class="error-message" style="display:none;"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <select class="form-select applicationstatename" asp-for="@Model[i].ApplicationStateId" asp-items="@(new SelectList(Model[i].StateTypes,"Id","Name"))">
+                                    <option value="">Select</option>
+                                </select>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <select class="form-select applicationdistrictname" asp-for="@Model[i].ApplicationDistrictId" asp-items="@(new SelectList(Model[i].DistrictTypes,"Id","Name"))">
+                                    <option value="">Select</option>
+                                </select>
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                <input type="checkbox" class="form-check-input applicationIsAcceptedTermsandConditions" asp-for="@Model[i].ApplicationIsAcceptedTermsAndConditions">
+                                 <span class="error-message" style="display:none;"></span>
+                            </td>
+                            <td>
+                                  <button class="btn btn-primary updateappraisalfromlist" type="button">Update</button>
+                                  <i class="bi bi-trash3-fill link-danger fs-3 deleteappraisal"></i>
+                            </td>
+                        </tr>
+                            
+                                       
+                                         paidtotal += Model[i].ApplicationRequestedAmount;
+                        
+                    }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" id="totalpaidsum">Total Paid : @paidtotal  </td>
+                    <td colspan="2" id="totalpaidformalerows">Total Paid For Male Rows: </td>
+                    <td colspan="2" id="totalpaidforfemalerows">Total Paid For Female Rows: </td>
+                    <td colspan="2" id="totalpaidforsscrows">Total Paid For SSC Rows: </td>
+                    <td colspan="2" id="totalpaidforcheckrows">Total Paid For Selected Rows: </td>
+                    <td colspan="22"><button type="button" class="float-end btn btn-primary btn-lg savelist">Save</button></td>
+                </tr>
+            </tfoot>
+                
+           </table>
+       </form>
+   </div>
+
+
+
+@*To append data to paymentmode dropdown in html table that is dynamically created in typescript*@
+
+<div class="d-none" id="applicationdocumenttypes">
+    @{
+        // if we want to append dropdown list from another list model
+       // var productTypeDetails = new SelectList(Model.AddProductDetails.Select(a=>a.ProductTypes), "Id", "Name");
+       var applicationdocumenttypes = new SelectList(Model[0].ApplicantDocumentTypes, "Id", "Name");
+                                <option value="">Select</option>
+                                @foreach (var detail in applicationdocumenttypes)
+        {
+                                    <option value=@detail.Value>@detail.Text</option>
+        }
+    }
+</div>
+
+<div class="d-none" id="applicationqualifications">
+    @{
+        var applicationqualifications = Html.GetEnumSelectList<Enums.ApplicationQualifications>().ToList();
+                                <option value="">Select</option>
+                                @foreach (var detail in applicationqualifications)
+        {
+                                    <option value=@detail.Text>@detail.Text</option>
+        }
+    }
+</div>
+<div class="d-none" id="applicationhobbies">
+    @{
+        var applicationhobbies = Html.GetEnumSelectList<Enums.ApplicantHobbies>().ToList();
+                                <option value="">Select</option>
+                                @foreach (var detail in applicationhobbies)
+        {
+                                    <option value=@detail.Text>@detail.Text</option>
+        }
+    }
+</div>  
+@section styles{
+
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+      .red-field {
+    border-color: red;
+}
+}
+@section scripts{
+    <script>
+         SystemJS.import('jquery').then(function () {
+            System.import('jqueryauto').then(function () {
+               System.import('Autocomplete').then(function () {
+                   SystemJS.import('moment').then(function () {
+                       SystemJS.import('bootstrap-datepicker').then(function () {
+                            SystemJS.import('AppraisalAdd').then(function (l) {
+                                var loan = new l.AppraisalAdd();
+                                loan.InitOnLoad();
+                            }).catch(function (err) { console.error(err); });
+                       }).catch(function (err) { console.error(err); });
+                   }).catch(function (err) { console.error(err); });
+               }).catch(function (err) { console.error(err); });
+            }).catch(function (err) { console.error(err); });
+         }).catch(function (err) { console.error(err); });
+                   
+    </script>
+}

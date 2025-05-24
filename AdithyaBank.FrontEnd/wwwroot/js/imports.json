@@ -1,0 +1,19 @@
+﻿{
+  "imports": {
+    "jquery": "/lib/jquery/dist/jquery.min.js",
+    "jquery-validation": "/lib/jquery-validation/dist/jquery.validate.min.js",
+    "jqueryunob": "/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js",
+    "bootstrap": "/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+    "typeahead-jquery": "/lib/Typeahead/typeahead.jquery.js",
+    "typeahead-bundle": "/lib/Typeahead/typeahead.bundle.js",
+    "bloodhound": "/lib/Typeahead/bloodhound.js",
+    "site": "/js/site.min.js",
+    "sweetalert2": "/lib/sweetalert2/sweetalert2.min.js",
+    "jqueryauto": "/lib/jquery.autocomplete-1.4.5.min.js",
+    "test": "/js/test.js",
+    "applicationdetails": "/js/applicationdetails.js",
+    "commons": "/js/commons.js",
+    "Autocomplete": "/js/commons.js",
+    "bootstrap-datepicker": "/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js",
+  }
+}

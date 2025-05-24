@@ -1,0 +1,220 @@
+﻿@using AdithyaBank.BackEnd.Models
+@model AdithyaBank.BackEnd.Models.ApplicationRegisterModel
+<!-- Overlay div -->
+<div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999;"></div>
+
+<!-- Spinner -->
+<div id="spinner" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000;">
+    <!-- Include spinner HTML/CSS here -->
+    <!-- For example, you can use a library like Font Awesome for the spinner icon -->
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+</div>
+<div class="card">
+ <div class="card-block">
+  <div class="card-header">
+    Appraisal  
+    </div>  
+  <div class="card-body">
+   <form action="AddAppraisal" method="post" enctype="multipart/form-data" id="myForm">
+      <div class="card">
+          <div class="card-body">
+              <div class="col-md-12">
+                   <div class="row p-5">
+                           <div class="col-md-6 border border-primary p-5">
+                        <div class="form-group">
+                            Application Name:
+                            <input type="text" asp-for="ApplicationName" class="form-control">
+                            <span asp-validation-for="ApplicationName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Father Name:
+                            <input type="text" asp-for="ApplicationFatherName" class="form-control">
+                            <span asp-validation-for="ApplicationFatherName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          ApplicationMother Name
+                            <input type="text" class="form-control" asp-for="ApplicationMotherName">
+                            <span asp-validation-for="ApplicationMotherName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Dob 
+                          <div class="selectdate">
+                               <input type="text" class="form-control" asp-for="ApplicationDob" asp-format="{0:dd-MMM-yyyy}" readonly />
+                          </div>
+                                      
+                        </div>
+                        <div class="form-group">
+                          Application Gender
+                          <label>
+                            <input type="radio" value="M" asp-for="ApplicationGender">
+                              <span> Male </span>
+                          </label>
+                          <label>
+                            <input type="radio" value="F" asp-for="ApplicationGender">
+                              <span> Female </span>
+                          </label>
+                          <span asp-validation-for="ApplicationGender" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Qualification
+                            <select class="form-select" asp-for="ApplicationQualification" asp-items="@(Html.GetEnumSelectList<Enums.ApplicationQualifications>().Where(c=>c.Value.Equals("1") || c.Value.Equals("2") || c.Value.Equals("3") || c.Value.Equals("4")|| c.Value.Equals("5")|| c.Value.Equals("6") || c.Value.Equals("7") || c.Value.Equals("8")).Select(si=>{si.Value=((Enums.ApplicationQualifications)int.Parse(si.Value)).ToString(); return si;}))">
+                              <option value="" >Select</option>
+                            </select>
+                            <span asp-validation-for="ApplicationQualification" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Martial Status
+                            <select class="form-select" asp-for="ApplicationMartialStatus">
+                              <option value="">Select</option>
+                              <option value="Single">Single</option>
+                              <option value="Married">Married</option>
+                            </select>
+                             <span asp-validation-for="ApplicationMartialStatus" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Mobile
+                            <input type="text" class="form-control" asp-for="ApplicationMobile">
+                            <span asp-validation-for="ApplicationMobile" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Email
+                            <input type="text" class="form-control" asp-for="ApplicationEmail">
+                             <span asp-validation-for="ApplicationEmail" class="text-danger"></span>
+                        </div>
+                
+                        <div class="form-group">
+                          Application Dcument Types
+                            <select class="form-select" asp-for="ApplicationDocumentTypeId" asp-items="@(new SelectList(Model.ApplicantDocumentTypes,"Id","Name"))">
+                              <option value="">Select</option>
+                            </select>
+                             <span asp-validation-for="ApplicationDocumentTypeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Requested Amount
+                            <input type="text" class="form-control" asp-for="ApplicationRequestedAmount">
+                            <span asp-validation-for="ApplicationRequestedAmount" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Hobbies     
+                           <select class="form-select" asp-for="ApplicationHobbies" asp-items="@(Html.GetEnumSelectList<Enums.ApplicantHobbies>().Where(c=>c.Value.Equals("1") || c.Value.Equals("2") || c.Value.Equals("3") || c.Value.Equals("4")|| c.Value.Equals("5")|| c.Value.Equals("6") || c.Value.Equals("7") || c.Value.Equals("8")).Select(si=>{si.Value=((Enums.ApplicantHobbies)int.Parse(si.Value)).ToString(); return si;}))" multiple>
+                           </select>
+                        </div>
+                        <div class="form-group">
+                          Application Register Date 
+                          <div class="selectdate">
+                                 <input type="text" class="form-control datepicker" asp-for="ApplicationRegisterDate" asp-format="{0:dd-MMM-yyyy}" readonly />
+
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          Application Address
+                            <textarea type="text" class="form-control" asp-for="ApplicationAddress"></textarea>      
+                            <span asp-validation-for="ApplicationAddress" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application Country
+                            @*<select class="form-select" asp-for="ApplicationCountryId" asp-items="@(new SelectList(Model.CountryTypes,"Id","Name"))">
+                              <option value="">Select</option>
+                            </select>*@
+                             <input type="text" class="form-control autocomplete" asp-for="ApplicationCountryName" placeholder="Search by Name">
+                             <input type="hidden" class="applicationcountryname" asp-for="ApplicationCountryId" />
+                             <span asp-validation-for="ApplicationCountryId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application State
+                            <select class="form-select applicationstatename" asp-for="ApplicationStateId">
+                              <option value="">Select</option>
+                            </select>
+                             <span asp-validation-for="ApplicationStateId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Application District
+                            <select class="form-select applicationdistrictname" asp-for="ApplicationDistrictId">
+                              <option value="">Select</option>
+                            </select>
+                            <span asp-validation-for="ApplicationDistrictId" class="text-danger"></span>
+                        </div>
+                
+                
+                        <div class="form-group">
+                          Application Document
+
+                            <input class="fileinput" accept=".pdf,.jpg,.jpeg" type="file" asp-for="DocumentFile">
+                            <!-- Image Preview -->
+                            <iframe id="pdfViewer" width="100%" height="600" style="border: none;" class="p-3"></iframe>
+                             <span asp-validation-for="DocumentFile" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                          Accept Terms & Conditions
+                            <input type="checkbox" class="form-check-input" asp-for="ApplicationIsAcceptedTermsAndConditions">
+                             <span asp-validation-for="ApplicationIsAcceptedTermsAndConditions" class="text-danger"></span>
+                        </div>
+
+                        <div>
+
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                        <div id="datepicker"
+			class="input-group date"
+			data-date-format="mm-dd-yyyy"> 
+			<input class="form-control"
+				type="text" readonly /> 
+			<span class="input-group-addon"> 
+				<i class="glyphicon glyphicon-calendar"></i> 
+			</span> 
+		</div>
+                </div>
+                   </div>
+              </div>                           
+          </div>
+      </div>
+      
+   </form>
+  
+  </div>
+ </div>
+</div>
+
+@section styles{
+
+    #overlay {
+    pointer-events: auto; /* Enable pointer events */
+}
+
+.overlay-active {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    pointer-events: none; /* Disable pointer events */
+}
+}
+
+@section scripts{
+   
+    <script>
+        
+         SystemJS.import('jquery').then(function () {
+            System.import('jqueryauto').then(function () {
+               System.import('Autocomplete').then(function () {
+                   SystemJS.import('moment').then(function () {
+                       SystemJS.import('bootstrap-datepicker').then(function () {
+                            SystemJS.import('AppraisalAdd').then(function (l) {
+                                var loan = new l.AppraisalAdd();
+                                loan.InitOnLoad();
+                            }).catch(function (err) { console.error(err); });
+                       }).catch(function (err) { console.error(err); });
+                   }).catch(function (err) { console.error(err); });
+               }).catch(function (err) { console.error(err); });
+            }).catch(function (err) { console.error(err); });
+         }).catch(function (err) { console.error(err); });
+                   
+    </script>
+   
+}

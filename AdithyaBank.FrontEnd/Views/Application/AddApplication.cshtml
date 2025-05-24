@@ -1,0 +1,529 @@
+﻿
+@model AppraisalModal
+@{
+    bool IsForAdminViewOnly = false;
+    if (TempData.ContainsKey("AdminForDisplayOnly"))
+    {
+        IsForAdminViewOnly = Convert.ToBoolean(TempData.Peek("AdminForDisplayOnly"));
+    }
+}
+
+<div class="row sticky-top">
+    <div class="card p-4">
+        <div class="card-body">
+            <partial name="_AppraisalMenuTabs" model=@(new AppriasalMenuTabModel(){AppraisalId=Model.EncryptId,ScreenType=Model.EncryptScreenType,TabFor=AppraisalTabFor.Appraisal})></partial>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header fw-bold text-center text-success">Application @(Model.Id > 0 ? ($" - {Model.Code}") : "")</div>
+        <div class="card-title"></div>
+        <div class="card-body">
+            <form asp-action="SaveAppraisal" method="post" id="appraisalform">
+
+                <input type="hidden" asp-for="Id" value=@Model.Id />
+                <input type="hidden" asp-for="EncryptId" />
+                <input type="hidden" asp-for="EncryptScreenType" />
+                <input type="hidden" asp-for="PreviousAppraisalId" />
+                <input type="hidden" asp-for="ProfileImageExtension" />
+
+
+                <div class="d-flex justify-content-center">
+                    <label class="col-sm-2 form-label required"> Application Type</label>
+                    <div class="col-sm-3 mr-5">
+                        <select asp-for="AppraisalTypeId" class="form-select" disabled="@(Model.Id>0?"disabled":null)" asp-items="Html.GetEnumSelectList<Enums.AppraisalType>()">
+                            <option value="0">Select </option>
+
+                        </select>
+                        <span asp-validation-for="AppraisalTypeId" class="text-danger"></span>
+                        <input type="hidden" asp-for="AppraisalTypeId" />
+                    </div>
+                     <label class="col-sm-2 form-label required changeLabel mx-5" id="searchby_code"><span>Code</span></label>
+                    <div class="col-sm-4">                      
+                        <div id="clientDiv">
+                            <div class="form-group search">
+                                <span class="fa fa-search form-control-search"></span>
+                                <input type="text" asp-for="ClientName" class="form-control" placeholder="Serach by code" disabled="@(Model.Id>0?"disabled":null)" />
+                            </div>
+                            <input type="hidden" asp-for="ClientApproachId" />
+                        </div>
+                        <div id="appraisalDiv">
+                            <div class="form-group search">
+                                <span class="fa fa-search form-control-search"></span>
+                                <input type="text" asp-for="Code" class="form-control" placeholder="Serach by Appraisal Code/Name" disabled="@(Model.Id>0?"disabled":null)" />
+                            </div>
+                        </div>
+                    </div>                                                           
+                </div>
+           
+                <div id="clientdetailscontainer">
+                    <div class="row g-3">
+                        <div class="card-header fw-bold text-white" style="background-color: #00AA9E;">Applicant Details</div>
+                        <div class="d-flex justify-content-center">
+                            <div class="wrapper">
+                                <img id="img_profileimage" src="~/images/no-profile.jpg" class="image--cover img-thumbnail rounded fade-in" alt="Client Image">
+                                <input type="hidden" asp-for="ProfileImage" />
+                            </div>
+
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <div class="">
+                                <input type="file" id="inputImg" accept="image/jpeg" class="d-none" />
+                                <div>
+                                    <button type="button" id="btnImgUpload" name="upload" class="btn btn-inverse btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Select from computer."><i class="fa fa-image fa-2x"></i></button>
+                                    <button type="button" id="btnImgCapture" name="upload" class="btn btn-inverse btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="capture image."><i class="fa fa-camera fa-2x"></i></button>
+                                    <button type="button" id="btnImgClear" name="upload" class="btn btn-inverse btn-sm" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove image."><i class="fa fa-rectangle-xmark fa-2x"></i></button>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-sm d-none">
+                            <label class="form-label">Application Code</label>
+                            <input type="text" class="form-control" asp-for="AppraisalCode" value="@(Model.Id==0?"Auto":Model.Code)" readonly />
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required-empty">Application Date</label>
+                            <input type="text" class="form-control" asp-for="AppraisalDate" value="@Model.AppraisalDate" readonly>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Zone</label>
+                            @* <select asp-for="ZoneId" class="form-select" asp-items="@(new SelectList(Model.AppraisalMastersModel.Zones, "Id", "Name"))">
+                            </select>*@
+                            <input type="text" asp-for="ZoneName" class="form-control" readonly />
+                            <input type="hidden" asp-for="ZoneId" class="form-control" />
+
+                            <span asp-validation-for="ZoneId" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Loan Type</label>
+                            <select asp-for="LoanTypeId" class="form-select" asp-items="@(new SelectList(Model.AppraisalMastersModel.LoanTypes, "Id", "Name"))">
+                            </select>
+                            <span asp-validation-for="LoanTypeId" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Name</label>
+                            <input type="text" class="form-control" asp-for="FirstName" placeholder="Name"  />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required-empty">Sur Name</label>
+                            <input type="text" class="form-control" asp-for="LastName" placeholder="Sur Name"  />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required-empty">Name as per PAN</label>
+                            <input type="text" class="form-control" asp-for="AliasName" placeholder="Alias Name"  />
+                        </div>
+                        <div class="col-sm-4">
+                            <label class="form-label required">Gender</label>
+                            <select asp-for="Gender" class="form-select" asp-items="Html.GetEnumSelectList<Enums.Gender>()">
+                                <option value=" ">Select </option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Date of Birth</label>
+                            <div id="datepicker" class="input-group date" data-date-format="dd-mm-yyyy">
+                                <input class="form-control" type="text" asp-for="DateOfBirth" asp-format="{0:dd-MMM-yyyy}" readonly />
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 ">
+                            <label class=" form-label">Age</label>
+                            <input type="text" class="form-control form-control" asp-for="Age" placeholder="Age" maxlength="2" readonly />
+                        </div>
+                        @if (Model.IsMobileNoVerified)
+                        {
+                            <div class="col-sm-4" id="mobile_number_noedit">
+                                <label class=" form-label required">Mobile Number</label>
+                                <input type="text" class="form-control" asp-for="Mobile1" readonly/>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-sm-4" id="mobile_number_edit">
+                                <label class=" form-label required">Mobile Number</label>
+                                <div class="input-group">
+                                    <input type="text" asp-for="Mobile1" class="form-control" placeholder="Mobile number" maxlength="10" aria-describedby="get_otp">
+                                    <div class="input-group-append" id="mobilenumber_get_otp">
+                                        <span class="input-group-text primary" id="get_otp">Get Otp</span>
+                                        <input type="hidden" asp-for="OTP" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-sm-4">
+                            <label class=" form-label required-empty">Alternative Number</label>
+                            <input type="text" class="form-control" asp-for="Mobile2" placeholder="Alternative mobile number" maxlength="10" />
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Mail Id</label>
+                            <input type="text" class="form-control" asp-for="Email" placeholder="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Father Name</label>
+                            <input type="text" class="form-control" asp-for="FatherName" placeholder="Father name" maxlength="100"  />
+                            <span asp-validation-for="FatherName" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Mother Name</label>
+                            <input type="text" class="form-control" asp-for="MotherName" placeholder="Mother name" maxlength="100"  />
+                            <span asp-validation-for="MotherName" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Spouse Name</label>
+                            <input type="text" class="form-control" asp-for="SpouceName" placeholder="Spouse name" maxlength="100" style="text-transform: uppercase;" />
+                            <span asp-validation-for="SpouceName" class="text-danger"></span>
+
+                        </div>
+                        
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Height(InFeet)</label>
+                            <input type="text" class="form-control amount" asp-for="HeightInFeet" maxlength="5" placeholder="Height in format {#.#}" />
+                            <span asp-validation-for="HeightInFeet" class="text-danger"></span>
+                        </div>
+                        <div class="col-sm-4">
+                            <label class=" form-label required">Weight(InKg)</label>
+                            <input type="text" class="form-control amount" asp-for="WeightInKg" maxlength="6" placeholder="Weight" />
+                            <span asp-validation-for="WeightInKg" class="text-danger"></span>
+                            <span id="BMI" class="text-info"></span>
+                        </div>
+
+
+
+                        <div class="card-header fw-bold text-white" style="background-color: #00AA9E;">Personal Details </div>
+                        <div class="col-sm-3">
+                            <label class=" form-label required">Marital Status</label>
+                            <select asp-for="MaritalStatusId" class="form-select" asp-items="@(new SelectList(Model.AppraisalMastersModel.MaritalStatus, "Id", "Name"))">
+                                <option value="0">Select </option>
+                            </select>
+                            <span asp-validation-for="MaritalStatusId" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label class=" form-label required">Religion</label>
+                            <select asp-for="ReligionId" class="form-select" asp-items="@(new SelectList(Model.AppraisalMastersModel.Religions, "Id", "Name"))">
+                                <option value="0">Select </option>
+                            </select>
+                            <span asp-validation-for="ReligionId" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label class=" form-label required">Caste </label>
+                            <select asp-for="CasteId" class="form-select" asp-items="@(new SelectList(Model.AppraisalMastersModel.Caste, "Id", "Name"))">
+                                <option value="0">Select </option>
+                            </select>
+                            <span asp-validation-for="CasteId" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label class=" form-label required">Literacy</label>
+                            <select asp-for="LiteracyId" class="form-select" asp-items="@(new SelectList(Model.AppraisalMastersModel.Literacies, "Id", "Name"))">
+                                <option value="0">Select </option>
+                            </select>
+                            <span asp-validation-for="LiteracyId" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label class=" form-label required">TotalFamily Members</label>
+                            <input type="text" class="form-control form-control" asp-for="TotalFamilyMembers" placeholder="Total Family Members" maxlength="1" />
+                            <span asp-validation-for="TotalFamilyMembers" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label class=" form-label">NoOf Dependants</label>
+                            <input type="text" class="form-control form-control" asp-for="NoOfDependants" placeholder="No Of Dependants" maxlength="1" />
+                            <span asp-validation-for="NoOfDependants" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label class=" form-label required">Residential Status</label>
+                            <select asp-for="ResidentialStatusId" class="form-select" asp-items="@(new SelectList(Model.AppraisalMastersModel.ResidentialStatus, "Id", "Name"))">
+                            </select>
+                            <span asp-validation-for="ResidentialStatusId" class="text-danger"></span>
+
+                        </div>
+                        <div class="col-sm-3">
+                            <label class=" form-label required">Residing Years</label>
+                            <input type="text" class="form-control form-control" asp-for="ResidingYears" placeholder="Residing Years" maxlength="2" />
+                            <span asp-validation-for="ResidingYears" class="text-danger"></span>
+                        </div>
+
+                        <div class="card-header fw-bold text-white" style="background-color: #00AA9E;">KYC Details </div>
+                        <div class="row g-3">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="d-none"></th>
+                                        <th>KYC Type</th>
+                                        <th>Document No</th>
+                                        <th class="text-center">Is Address Proof</th>
+                                        <th>  <button type="button" id="appraisal_kyc_add" class="btn btn-link">Add</button></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="appraisal_kycdetail_tablebody">
+                                    @for (int i = 0; i < Model.AppraisalKYCDetails.Count; i++)
+                                    {
+                                        <tr>
+                                            <td class="d-none"><input type="hidden" asp-for="AppraisalKYCDetails[i].Id"></td>
+                                            <td>
+                                                <select class="form-select kyc_type_select" asp-for="AppraisalKYCDetails[i].KYCTypeId" asp-items="@(new SelectList(@Model.KYCTypes,"Id","Name")) ">
+                                                    <option value="0">Select</option>
+                                                </select>
+                                            </td>
+                                            <td class="text-center"><input type="text" class="form-control" asp-for="AppraisalKYCDetails[i].KYCDocumentNo" /></td>
+                                            <td class="text-center">
+                                                <input name="AppraisalKYCDetails[@(i)].IsAddressProof" type="checkbox" checked="@(Model.AppraisalKYCDetails[i].IsAddressProof?"checked":null)" data-style="slow" data-toggle="toggle" data-onvalue="true" data-offvalue="false" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="danger" />
+                                                @*<input asp-for="AppraisalKYCDetails[i].IsAddressProof" type="checkbox" data-style="slow" data-toggle="toggle" data-onvalue="true" data-offvalue="false" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="danger" />*@
+                                            </td>
+                                            <td class="text-center"><button type="button" class="btn btn-danger appraisal_kycdetails_delete"><i class="fa fa-trash"></i></button></td>
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+
+                        </div>
+
+                    </div>
+
+                    @if (IsForAdminViewOnly == false)
+                    {
+                        <div class="card-footer d-flex justify-content-end" id="footercontainer">
+                            <button type="submit" class="btn btn-primary">Save & Proceed</button>
+                        </div>
+                    }
+                    
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<div id="appralsal_kyctype_container" class="d-none">
+    <option value="0">Select</option>
+    @foreach (var kycType in Model.KYCTypes)
+    {
+        <option value=@kycType.Id>@kycType.Name</option>
+    }
+</div>
+
+<div class="modal fade" id="myCaptureModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Capture image.</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content" id="appraisal_side_div_table">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group row">
+                                    @*<style>
+                                    #my_camera {
+                                    width: 280px;
+                                    height: 320px;
+                                    border: 1px solid black;
+                                    }
+                                    </style>*@
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="label label-light-info">Live Cam</label>
+                                                <div id="my_camera"></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="label label-light-info">Picture Taken</label>
+                                                <div id="results" class="panel-body"></div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type=button value="Take Snapshot" class="btn btn-inverse btn-block float-right" onClick="take_snapshot()">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button type="button" id="btnCapture" class="btn btn-skype btn-block float-left">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="on_otp_submit">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<partial name="_AppraisalStatusSideBar" model="Model.EncryptId"></partial>*@
+
+<div class="modal fade" id="OtpConfirmModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">OTP validation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content ">
+                    <div class="card-block">
+                        <div id="wrapper">
+                            <div id="dialog" class="text-center">
+                                <h6 class="text-purple" id="otpmessage"></h6>
+                                <hr />
+                                <form>
+                                    <div id="approachConfirmForm" class="mt-4">
+                                        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+                                        <input type="text" maxLength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
+
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="validate_otp">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="appraisal_creditbureau_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="appraisal_creditbureau_header" aria-hidden="true">
+</div>
+
+@section styles
+    {
+    <style>
+        #scrollable-dropdown-menu .tt-dropdown-menu {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .wrapper {
+            padding: 0px;
+        }
+
+        .image--cover {
+            width: 150px;
+            height: 150px;
+        }
+
+        .slow .toggle-group {
+            transition: left 0.7s;
+            -webkit-transition: left 0.7s;
+        }
+
+    </style>
+}
+
+@*<partial name="_SubmitLoader"></partial>*@
+
+
+
+@section scripts{
+    <script> 
+         System.import('moment').then(function () {
+        System.import('jqueryauto').then(function () {
+                    System.import('ApplicationAdd').then(function (w) {
+                         $(document).ready(function () {
+                            Webcam.set({
+                                width: 280,
+                                height: 320,
+                                image_format: 'jpg',
+                                jpeg_quality: 120
+                            });
+                            Webcam.attach('#my_camera');
+
+                            var imageData = canvas.toDataURL('image/png');
+                         document.getElementsByName("myHiddenField")[0].setAttribute("value", imageData);
+        });
+                        var ward = new w.ApplicationAdd();
+                        ward.InitOnLoad();
+                    }).catch(function (err) { console.error(err); });
+          }).catch(function (err) { console.error(err); });
+        }).catch(function (err) { console.error(err); });
+    </script>
+
+}
+
+@* <div class="col-md-12">
+                <div class="row">
+                   <div class="form-group row mb-2">
+                        <label class="col-md-2 text-md-right required">Application Name :</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" asp-for="ApplicationName" />
+                            <span asp-validation-for="ApplicationName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label class="col-md-2 text-md-right required">Application fathername :</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" asp-for="Applicationfathername" />
+                            <span asp-validation-for="Applicationfathername" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label class="col-md-2 text-md-right required">Application mothername :</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" asp-for="Applicationmothername" />
+                            <span asp-validation-for="Applicationmothername" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row mb-2">
+                        <label class="col-md-2 text-md-right required">Application gender :</label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" asp-for="Applicationgender" />
+                            <span asp-validation-for="Applicationgender" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row form-group row">
+                        <label class="col-md-3 text-right required">Date :</label>
+                        <div class="col-md-3 col-sm-3">
+                               <div class="input-daterange input-group" id="datepickerdiv">
+                                    <input type="text" class="form-control" asp-for="Applicationdob" asp-format="{0:dd-MMM-yyyy}" readonly />
+                                </div>
+                        </div>
+                   </div>
+                    <div class="form-group row mb-2">
+                        <div class="col-md-5">
+                            <input type="submit" class="btn-primary" value="Save"/>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>*@

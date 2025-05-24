@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AdithyaBank.UnitTest": {
+      "commandName": "Project",
+      "jsWebView2Debugging": false,
+      "sqlDebugging": false,
+      "nativeDebugging": true
+    }
+  }
+}
