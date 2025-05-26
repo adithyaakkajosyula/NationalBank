@@ -108,13 +108,28 @@ app.UseMiddleware<ErrorHandlerMiddleware>();
     Console.WriteLine("Response: LoggingMiddleware");
 });*/
 
+/*if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(options => {
+        options.SwaggerEndpoint("/swagger/V1/swagger.json", "Product WebAPI");
+    });
+}*/
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(options => {
         options.SwaggerEndpoint("/swagger/V1/swagger.json", "Product WebAPI");
     });
+
+    app.UseHttpsRedirection();
 }
+else
+{
+    // In production, skip HTTPS redirection on Render
+}
+
 
 app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
@@ -122,4 +137,8 @@ app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
+app.Urls.Clear();
+app.Urls.Add($"http://*:{port}");
+
 app.Run();
