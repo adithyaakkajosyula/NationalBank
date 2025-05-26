@@ -4,7 +4,7 @@ WORKDIR /src
 
 COPY . .
 
-# Restore just the API project, since solution file is not available
+# Restore only the project, not the solution
 RUN dotnet restore "AdithyaBank.Api.csproj"
 
 RUN dotnet publish "AdithyaBank.Api.csproj" -c Release -o /app/publish
