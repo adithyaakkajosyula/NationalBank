@@ -123,15 +123,9 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/V1/swagger.json", "Product WebAPI");
     });
 
-    app.UseHttpsRedirection();
-}
-else
-{
-    // In production, skip HTTPS redirection on Render
+    app.UseHttpsRedirection(); 
 }
 
-
-app.UseHttpsRedirection();
 app.UseCors(MyAllowSpecificOrigins);
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
