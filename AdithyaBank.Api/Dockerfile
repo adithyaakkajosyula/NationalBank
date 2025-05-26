@@ -1,17 +1,15 @@
-﻿# Use the official .NET SDK image to build the app
+﻿# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+
+COPY . .
+
+RUN dotnet restore "AdithyaBank.sln"
+RUN dotnet publish "AdithyaBank.Api/AdithyaBank.Api.csproj" -c Release -o /app/publish
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 WORKDIR /app
+COPY --from=build /app/publish .
 
-# Copy everything
-COPY . ./
-
-# Restore and publish the app
-RUN dotnet publish -c Release -o out
-
-# Use the runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
-WORKDIR /app
-COPY --from=build /app/out ./
-
-# Start the app
 ENTRYPOINT ["dotnet", "AdithyaBank.Api.dll"]
