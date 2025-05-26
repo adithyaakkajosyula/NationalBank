@@ -131,8 +131,7 @@ app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-var port = Environment.GetEnvironmentVariable("PORT") ?? "80";
-app.Urls.Clear();
-app.Urls.Add($"http://*:{port}");
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.Run();
