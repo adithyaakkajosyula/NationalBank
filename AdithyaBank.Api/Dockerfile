@@ -4,13 +4,12 @@ WORKDIR /src
 
 COPY . .
 
-RUN dotnet restore "AdithyaBank.Api.csproj"
-RUN dotnet publish "AdithyaBank.Api.csproj" -c Release -o /app/publish
+RUN dotnet restore "AdithyaBank.sln"
+RUN dotnet publish "AdithyaBank.Api/AdithyaBank.Api.csproj" -c Release -o /app/publish
 
 # Stage 2: Runtime
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS final
 WORKDIR /app
-
 COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "AdithyaBank.Api.dll"]
