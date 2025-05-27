@@ -44,7 +44,5 @@ namespace AdithyaBank.Api.Controllers
             var applicationslist = await _applicationRegisterRepository.GetAppraisalsList();
             return Ok(applicationslist);
         }
-
-
     }
 }

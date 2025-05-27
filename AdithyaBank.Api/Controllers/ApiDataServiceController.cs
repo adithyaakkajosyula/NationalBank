@@ -1,6 +1,7 @@
 ﻿using AdithyaBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace AdithyaBank.Api.Controllers
 {
@@ -47,6 +48,16 @@ namespace AdithyaBank.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("getcountries")]
+        public async Task<IActionResult> GetStatesbyCountry([FromQuery]long countryId)
+        {
+            var result = await _commonRepository.GetDistrictTypes(countryId);
+            if (result == null) { throw new InvalidOperationException("Result was null."); }
+            if (result.Count() == 0) { return NotFound("No Districts Found For CountryId"); }
+            return Ok(result);
+        }
+
 
     }
 }
