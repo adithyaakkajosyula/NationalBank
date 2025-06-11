@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class AdithyaBankScreensBuilderServices
@@ -24,6 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICommonRepository,CommonRepository>();
             builder.Services.AddScoped<IApplicationRegisterRepository,ApplicationRegisterRepository>();
+            
             return builder;
         }
     }

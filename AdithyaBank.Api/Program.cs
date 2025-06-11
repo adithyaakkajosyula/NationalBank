@@ -10,11 +10,25 @@ using AdithyaBank.BackEnd.Authorization;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 using AdithyaBank.BackEnd.Entities;
+using AdithyaBank.Api.Filters;
+using Serilog;
+using AdithyaBank.Api.Controllers;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog(); // Add Serilog to the pipeline
 builder.Services.AddControllers();
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
@@ -51,6 +65,8 @@ builder.Services.AddSwaggerGen(options => {
 
 builder.Services.AddOptions();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+builder.Services.AddScoped<APIIActionFilter>();
+builder.Services.AddScoped<CustomExceptionFilter>();
 builder.Services.AddDbContext<AdithyaBankIdentityDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetSection("AppSettings:IdentityDatabaseConnectionString").Value);

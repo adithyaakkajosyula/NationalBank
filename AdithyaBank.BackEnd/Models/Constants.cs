@@ -11,8 +11,8 @@ namespace AdithyaBank.BackEnd.Models
         public static string DataProtectionKey = "JFL";
         public struct RolesList
         {
-            public const string Admin = "f93098f1-5e68-4348-a8de-bb237996f1fc";
-            public const string HR = "e49f3fc1-e1b6-4d8f-8a95-a2da9265d89a";
+            public const string Admin = "Admin";
+            public const string HR = "HR";
         }
         public enum AppraisalTabFor
         {
