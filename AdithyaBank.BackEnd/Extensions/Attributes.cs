@@ -95,4 +95,14 @@ namespace AdithyaBank.BackEnd.Extensions
             public static HashSet<char> AllowedCharsInPassword = new HashSet<char> { '!', '@', '#', '$', '%', '*', '_', '.' };
         }
     }
+
+    public class NoSpecialCharsAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            var str = value as string;
+            if (string.IsNullOrEmpty(str)) return true;
+            return !str.Any(ch => !char.IsLetterOrDigit(ch));
+        }
+    }
 }

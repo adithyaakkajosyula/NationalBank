@@ -8,6 +8,5 @@ public class User : IdentityUser
 {
     public string RoleId { get; set; }
     public  Role Role { get; set; }
-
-
+    public DateTime Dob { get; set; }
 }

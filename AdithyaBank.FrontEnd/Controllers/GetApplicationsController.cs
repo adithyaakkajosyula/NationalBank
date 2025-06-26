@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdithyaBank.FrontEnd.Controllers
 {
-    [Authorize]
+    [CustomAuthorize]
     public class GetApplicationsController : BaseController
     {
         private IApplicationRegisterRepository _applicationRegisterRepository;

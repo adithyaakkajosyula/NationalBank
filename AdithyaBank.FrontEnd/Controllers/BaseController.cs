@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AdithyaBank.FrontEnd.Controllers
 {
-    [Authorize]
+    [CustomAuthorize]
     public class BaseController : Controller
     {
         protected internal BaseController WithSuccess(string Message)

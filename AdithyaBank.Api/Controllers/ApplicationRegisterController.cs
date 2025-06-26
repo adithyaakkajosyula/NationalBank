@@ -8,7 +8,7 @@ using static AdithyaBank.BackEnd.Models.Enums;
 
 namespace AdithyaBank.Api.Controllers
 {
-    [Authorize]
+    [CustomAuthorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ApplicationRegisterController : ControllerBase

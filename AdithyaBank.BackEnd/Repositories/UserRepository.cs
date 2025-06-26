@@ -55,6 +55,7 @@ public class UserRepository : IUserRepository
         {
             Id = user.Id,
             Username = user.UserName,
+            Dob = user.Dob,
             Role = new RoleModel()
             {
                 Id = user.Role.Id,
@@ -93,6 +94,7 @@ public class UserRepository : IUserRepository
             {
                 Id = user.Id,
                 Username = user.UserName,
+                Dob = user.Dob, 
                 Role = new RoleModel()
                 {
                     Id = user.Role.Id,

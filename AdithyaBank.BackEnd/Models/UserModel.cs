@@ -11,6 +11,7 @@ public class UserModel : ApiBaseResultModel
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Username { get; set; }
+    public DateTime Dob { get; set; }
     public RoleModel Role { get; set; }
 }
 public class RoleModel

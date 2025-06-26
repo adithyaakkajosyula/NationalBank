@@ -27,12 +27,15 @@ public class JwtUtils : IJwtUtils
         // generate token that is valid for 7 days
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.JWT.Secret);
+        int age = DateTime.Today.Year - user.Dob.Year;
+        if (user.Dob.Date > DateTime.Today.AddYears(-age)) age--;
 
         // Create a list of claims
         var claims = new[]
         {
             new Claim("id", user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
+            new Claim("Age",age.ToString()),
             new Claim("role", user.Role.ToString()),
             new Claim("isSuccess", user.IsSuccess.ToString()),
             new Claim("message",user.Message)
@@ -71,7 +74,7 @@ public class JwtUtils : IJwtUtils
             var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
 
             // return user id from JWT token if validation successful
-            return new ApiBaseResultModel() { Id = userId,IsSuccess = true,Message=""};
+            return new ApiBaseResultModel() { Id = userId,Data = jwtToken,IsSuccess = true,Message=""};
         }
         catch(Exception ex)
         {

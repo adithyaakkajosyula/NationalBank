@@ -19,7 +19,7 @@ namespace AdithyaBank.FrontEnd.Controllers
         {
             _logger = logger;
         }
-        [Authorize]
+        [CustomAuthorize]
         public IActionResult Index()
         {
             var user = (UserModel)HttpContext.Items["User"];

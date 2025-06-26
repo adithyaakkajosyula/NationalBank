@@ -14,6 +14,7 @@ using AdithyaBank.Api.Filters;
 using Serilog;
 using AdithyaBank.Api.Controllers;
 using Microsoft.AspNetCore.Diagnostics;
+using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,8 +66,21 @@ builder.Services.AddSwaggerGen(options => {
 
 builder.Services.AddOptions();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();         
+builder.Services.AddInMemoryRateLimiting();
+
+builder.Services.Configure<IpRateLimitOptions>(
+        builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.Configure<IpRateLimitPolicies>(
+        builder.Configuration.GetSection("IpRateLimitPolicies"));
+
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddScoped<APIIActionFilter>();
-builder.Services.AddScoped<CustomExceptionFilter>();
+builder.Services.AddScoped<APIIExceptionFilter>();
+builder.Services.AddScoped<APIIResourceFilter>();
+builder.Services.AddScoped<APIIResultFilter>();
 builder.Services.AddDbContext<AdithyaBankIdentityDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetSection("AppSettings:IdentityDatabaseConnectionString").Value);
@@ -78,6 +92,14 @@ builder.Services.AddDbContext<AdithyaBankDatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetSection("AppSettings:DatabaseConnectionString").Value);
 });
 builder.Services.AddAdithyamainServices();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+
+    options.AddPolicy("MinimumAge18", policy =>
+        policy.RequireClaim("Age", "18", "19", "20", "21")); // sample age claim check
+});
 builder.Services.AddAuthentication(opt => {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -101,12 +123,6 @@ builder.Services.AddCors(options =>
         builder => builder
        .AllowAnyOrigin()
         .AllowAnyMethod().AllowAnyHeader());
-    /*options.AddPolicy(MyAllowSpecificOrigins,
-        builder => builder.AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true) // allow any origin
-                .AllowCredentials()
-        );*/
 });
 
 
@@ -146,5 +162,6 @@ app.UseCors(MyAllowSpecificOrigins);
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseIpRateLimiting();
 app.MapControllers();
 app.Run();

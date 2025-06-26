@@ -1,19 +1,10 @@
 ﻿using AdithyaBank.Api.Filters;
 using AdithyaBank.BackEnd.Authorization;
-using AdithyaBank.BackEnd.DataContext;
-using AdithyaBank.BackEnd.Entities;
+using AdithyaBank.BackEnd.Extensions;
 using AdithyaBank.BackEnd.RepoInterfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Reflection.Metadata.Ecma335;
-using System.Runtime.InteropServices;
-using static AdithyaBank.BackEnd.Models.Constants;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace AdithyaBank.Api.Controllers
 {
@@ -75,7 +66,9 @@ namespace AdithyaBank.Api.Controllers
             return Ok(result);
         }
 
+        [ServiceFilter(typeof(APIIResourceFilter))]
         [ServiceFilter(typeof(APIIActionFilter))]
+        [ServiceFilter(typeof(APIIResultFilter))]
         [HttpPost("SendDetails")]
         public async Task<IActionResult> SendDetails([FromBody] Student product, CancellationToken cancellationToken)
         {
@@ -84,37 +77,20 @@ namespace AdithyaBank.Api.Controllers
                 // Simulate a delay
                 await Task.Delay(10000, cancellationToken); // Cancel if client drops
 
-                return Ok("Data processed");
+                return Ok(product);
             }
             catch (OperationCanceledException)
             {
-                _logger.LogWarning("❌ Request was cancelled at {Time}", DateTime.Now);
+                _logger.LogError("❌ Request was cancelled at {Time}", DateTime.Now);
                 return BadRequest("Request was cancelled by client.");
             }
         }
 
-
-
-
-       // [ServiceFilter(typeof(CustomExceptionFilter))]
-        [HttpGet("GetEmployeeDetailsByQueryParameter")]
-        public async Task<ActionResult<Employee>> GetEmployeeDetailsByQueryParameter([FromQuery]int id)
+        [HttpGet("secured")]
+        [CustomAuthorize(Policy = "MinimumAge18")]
+        public IActionResult GetSecuredData()
         {
-            try
-            {
-                // var emp = GetEmployeesList().Where(a => a.Id == id).First();
-                int zero = 0;
-                var emp = 1 / zero;
-
-                if (emp == null) return NotFound();
-
-                return Ok(emp);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            
+            return Ok("This is protected by age-based policy");
         }
         private List<Employee> GetEmployeesList()
         {
@@ -168,28 +144,7 @@ namespace AdithyaBank.Api.Controllers
         public long Phone { get; set; }
     }
 
-    public class NoSpecialCharsAttribute : ValidationAttribute
-    {
-        public override bool IsValid(object value)
-        {
-            var str = value as string;
-            if (string.IsNullOrEmpty(str)) return true;
-            return !str.Any(ch => !char.IsLetterOrDigit(ch));
-        }
-    }
+   
 
-    public class CustomExceptionFilter : IExceptionFilter
-    {
-        public void OnException(ExceptionContext context)
-        {
-            // Customize the response sent when an unhandled exception occurs
-            context.Result = new ObjectResult(new { message = "An error occurred.", details = context.Exception.Message })
-            {
-                StatusCode = 500
-            };
-
-            // Prevent the exception from propagating further
-            context.ExceptionHandled = true;
-        }
-    }
+    
 }

@@ -12,7 +12,7 @@ using static AdithyaBank.BackEnd.Models.Enums;
 using AdithyaBank.BackEnd.Entities;
 using static AdithyaBank.BackEnd.Models.Constants;
 
-[Authorize]
+[CustomAuthorize]
 [ApiController]
 [Route("[controller]")]
 public class UsersController : ControllerBase
@@ -31,7 +31,7 @@ public class UsersController : ControllerBase
         _configuration = configuration;
     }
 
-    [AllowAnonymous]
+    [CustomAllowAnonymous]
     [HttpPost("[action]")]
     public async Task<IActionResult> Authenticate(AuthenticateRequest model)
     {
@@ -40,7 +40,7 @@ public class UsersController : ControllerBase
         return Ok(response);
     }
 
-    [Authorize(new string[] { RolesList.Admin, RolesList.HR })]
+    [CustomAuthorize(new string[] { RolesList.Admin, RolesList.HR })]
     [HttpGet]
     public IActionResult GetAll()
     {
@@ -48,7 +48,7 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
     //[Authorize(RolesList.Admin)]
-    [Authorize]
+    [CustomAuthorize]
     [HttpGet("{id:Guid}")]
     public async Task<IActionResult> GetById(string id)
     {
@@ -59,7 +59,7 @@ public class UsersController : ControllerBase
         }
         return Ok(user);
     }
-    [AllowAnonymous]
+    [CustomAllowAnonymous]
     [HttpPost]
     [Route("register-admin")]
     public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)

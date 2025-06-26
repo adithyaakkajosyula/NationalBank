@@ -4,6 +4,8 @@ using AdithyaBank.BackEnd.Models;
 using AdithyaBank.BackEnd.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 public class JwtMiddleware
 {
@@ -20,18 +22,25 @@ public class JwtMiddleware
     {
         var authorizationHeader = context.Request.Headers["Authorization"].FirstOrDefault();
 
-        // Check if the header is present and starts with 'Bearer'
+        // Check if the header is present and starts with 'Bearer '
         if (!string.IsNullOrEmpty(authorizationHeader) && authorizationHeader.StartsWith("Bearer "))
         {
-            // Ensure there is exactly one 'Bearer' and a valid token part after it
             var parts = authorizationHeader.Split(" ");
             if (parts.Length == 2 && !string.IsNullOrEmpty(parts[1]))
             {
-                var token = parts[1]; // Extract the token part
+                var token = parts[1];
+
+                // Validate JWT and get result
                 var apiBaseResultModel = jwtUtils.ValidateJwtToken(token);
-                if (apiBaseResultModel.IsSuccess == true)
+                if (apiBaseResultModel.IsSuccess && apiBaseResultModel.Data is JwtSecurityToken jwtToken)
                 {
-                    // Attach user to context on successful JWT validation
+                    //  Set ClaimsPrincipal (context.User) from token's claims
+                    var claims = jwtToken.Claims.ToList();
+                    var identity = new ClaimsIdentity(claims, "CustomJwt");
+                    var principal = new ClaimsPrincipal(identity);
+                    context.User = principal;
+
+                    //  Optional: Attach the full user object to HttpContext.Items
                     context.Items["User"] = await userService.GetById(apiBaseResultModel.Id);
                 }
                 else
@@ -43,13 +52,12 @@ public class JwtMiddleware
             }
             else
             {
-                // If there's more than one 'Bearer', consider it invalid
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await context.Response.WriteAsync("Invalid Authorization header format.");
                 return;
             }
         }
 
-        await _next(context); // Proceed to the next middleware
+        await _next(context); // Proceed to next middleware
     }
 }
