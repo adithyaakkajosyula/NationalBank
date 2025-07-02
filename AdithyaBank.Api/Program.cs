@@ -1,7 +1,6 @@
 using AdithyaBank.BackEnd.Models;
 using AdithyaBank.BackEnd.DataContext;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -12,9 +11,10 @@ using Microsoft.AspNetCore.Identity;
 using AdithyaBank.BackEnd.Entities;
 using AdithyaBank.Api.Filters;
 using Serilog;
-using AdithyaBank.Api.Controllers;
-using Microsoft.AspNetCore.Diagnostics;
-using AspNetCoreRateLimit;
+using System.Threading.RateLimiting;
+using AdithyaBank.BackEnd.Configuration;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,50 +33,74 @@ builder.Host.UseSerilog(); // Add Serilog to the pipeline
 builder.Services.AddControllers();
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+builder.Services
+    .AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        /* options.ApiVersionReader = ApiVersionReader.Combine(
+             new UrlSegmentApiVersionReader(),
+             new HeaderApiVersionReader("api-version"));*/
+        //options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
+        options.ApiVersionReader = new HeaderApiVersionReader("api-version"); 
+    })
+    .AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
+    });
+
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options => {
-    options.SwaggerDoc("V1", new OpenApiInfo
-    {
-        Version = "V1",
-        Title = "WebAPI",
-        Description = "Product WebAPI"
-    });
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Description = "Bearer Authentication with JWT Token",
-        Type = SecuritySchemeType.Http
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
-        {
-            new OpenApiSecurityScheme {
-                Reference = new OpenApiReference {
-                    Id = "Bearer",
-                        Type = ReferenceType.SecurityScheme
-                }
-            },
-            new List < string > ()
-        }
-    });
-});
+builder.Services.AddSwaggerGen();
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 builder.Services.AddOptions();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 builder.Services.AddMemoryCache();
-builder.Services.AddHttpContextAccessor();         
-builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddHttpContextAccessor();
+
+
+/*builder.Services.AddInMemoryRateLimiting();
 
 builder.Services.Configure<IpRateLimitOptions>(
         builder.Configuration.GetSection("IpRateLimiting"));
-builder.Services.Configure<IpRateLimitPolicies>(
-        builder.Configuration.GetSection("IpRateLimitPolicies"));
 
-builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();*/
+
+//   RATE-LIMITER CONFIG 
+builder.Services.AddRateLimiter(options =>
+{
+    // Global Concurrency Limiter: 2 running, 50 waiting
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(_ =>
+        RateLimitPartition.GetConcurrencyLimiter(
+            partitionKey: "global",
+            _ => new ConcurrencyLimiterOptions
+            {
+                PermitLimit = 1,            // active slots
+                QueueLimit = 1,            // queued requests
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            }));
+
+    // Return 429 instead of default 503
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Custom body + logging when blocked
+    options.OnRejected = async (context, ct) =>
+    {
+        var log = context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+                       .CreateLogger("RateLimiter");
+        log.LogWarning(" Rejected {Path} – queue full", context.HttpContext.Request.Path);
+
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+            """{ "error": "Too many concurrent requests" }""", ct);
+    };
+});
+
 builder.Services.AddScoped<APIIActionFilter>();
 builder.Services.AddScoped<APIIExceptionFilter>();
 builder.Services.AddScoped<APIIResourceFilter>();
@@ -140,28 +164,30 @@ app.UseMiddleware<ErrorHandlerMiddleware>();
     Console.WriteLine("Response: LoggingMiddleware");
 });*/
 
-/*if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options => {
-        options.SwaggerEndpoint("/swagger/V1/swagger.json", "Product WebAPI");
-    });
-}*/
-
 if (app.Environment.IsDevelopment())
 {
+    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
     app.UseSwagger();
-    app.UseSwaggerUI(options => {
-        options.SwaggerEndpoint("/swagger/V1/swagger.json", "Product WebAPI");
+    app.UseSwaggerUI(options =>
+    {
+        foreach (var desc in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint(
+                $"/swagger/{desc.GroupName}/swagger.json",
+                $"WebAPI {desc.GroupName.ToUpperInvariant()}");
+        }
     });
 
     app.UseHttpsRedirection(); 
 }
-
+app.UseRouting();
+app.UseRateLimiter();
 app.UseCors(MyAllowSpecificOrigins);
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseIpRateLimiting();
+//app.UseIpRateLimiting();
+
 app.MapControllers();
 app.Run();

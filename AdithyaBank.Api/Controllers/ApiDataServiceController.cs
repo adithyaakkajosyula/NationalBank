@@ -23,6 +23,7 @@ namespace AdithyaBank.Api.Controllers
         [HttpGet("countries")]
         public async Task<IActionResult> GetCountries()
         {
+            await Task.Delay(30000);
             var result = await _commonRepository.GetCountries();
             if (result ==null)
             {
