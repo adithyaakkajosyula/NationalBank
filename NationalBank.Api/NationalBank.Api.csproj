@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AdithyaBank.BackEnd\NationalBank.BackEnd.csproj" />
+    <ProjectReference Include="..\NationalBank.BackEnd\NationalBank.BackEnd.csproj" />
   </ItemGroup>
 
 </Project>
