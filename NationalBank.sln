@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdithyaBank.BackEnd", "AdithyaBank.BackEnd\AdithyaBank.BackEnd.csproj", "{8D006232-2A9A-4AF2-BE2D-266167399D60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NationalBank.BackEnd", "AdithyaBank.BackEnd\NationalBank.BackEnd.csproj", "{8D006232-2A9A-4AF2-BE2D-266167399D60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdithyaBank.Api", "AdithyaBank.Api\AdithyaBank.Api.csproj", "{97E9B8E2-838F-4769-83F4-CE645D040B60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NationalBank.Api", "AdithyaBank.Api\NationalBank.Api.csproj", "{97E9B8E2-838F-4769-83F4-CE645D040B60}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdithyaBank.UnitTest", "AdithyaBank.UnitTest\AdithyaBank.UnitTest.csproj", "{0A413B5F-00A8-4EBD-BE51-B52989BEBED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NationalBank.UnitTest", "AdithyaBank.UnitTest\NationalBank.UnitTest.csproj", "{0A413B5F-00A8-4EBD-BE51-B52989BEBED3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdithyaBank.FrontEnd", "AdithyaBank.FrontEnd\AdithyaBank.FrontEnd.csproj", "{726DA7BA-AD94-4F9C-A27F-34ED90F099D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NationalBank.FrontEnd", "AdithyaBank.FrontEnd\NationalBank.FrontEnd.csproj", "{726DA7BA-AD94-4F9C-A27F-34ED90F099D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
