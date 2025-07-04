@@ -1,9 +1,9 @@
-﻿using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace AdithyaBank.FrontEnd.Controllers
+namespace NationalBank.FrontEnd.Controllers
 {
     
 

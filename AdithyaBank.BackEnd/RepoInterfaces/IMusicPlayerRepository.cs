@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.RepoInterfaces
+namespace NationalBank.BackEnd.RepoInterfaces
 {
     public interface IMusicPlayerRepository
     {

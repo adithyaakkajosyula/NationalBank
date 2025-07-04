@@ -1,7 +1,7 @@
-using AdithyaBank.BackEnd.Entities;
-using static AdithyaBank.BackEnd.Models.Enums;
+using NationalBank.BackEnd.Entities;
+using static NationalBank.BackEnd.Models.Enums;
 
-namespace AdithyaBank.BackEnd.Models;
+namespace NationalBank.BackEnd.Models;
 
 public class AuthenticateResponse :BaseResultModel
 {

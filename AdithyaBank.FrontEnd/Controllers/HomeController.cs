@@ -1,15 +1,15 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.FrontEnd.Models;
+using NationalBank.BackEnd.Models;
+using NationalBank.FrontEnd.Models;
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.IO;
 using Newtonsoft.Json;
 using System.Security.Claims;
-using AdithyaBank.BackEnd.Authorization;
+using NationalBank.BackEnd.Authorization;
 
-namespace AdithyaBank.FrontEnd.Controllers
+namespace NationalBank.FrontEnd.Controllers
 {
     public class HomeController : BaseController
     {

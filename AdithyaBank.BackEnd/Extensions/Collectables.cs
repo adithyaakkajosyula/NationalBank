@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.Extensions
+namespace NationalBank.BackEnd.Extensions
 {
     public static class Collectables
     {

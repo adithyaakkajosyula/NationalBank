@@ -1,6 +1,6 @@
-using AdithyaBank.BackEnd.Authorization;
-using AdithyaBank.BackEnd.Helpers;
-using AdithyaBank.BackEnd.Models;
+using NationalBank.BackEnd.Authorization;
+using NationalBank.BackEnd.Helpers;
+using NationalBank.BackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

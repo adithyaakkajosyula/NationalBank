@@ -1,4 +1,4 @@
-﻿using AdithyaBank.BackEnd.Extensions;
+﻿using NationalBank.BackEnd.Extensions;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static AdithyaBank.BackEnd.Extensions.CheckBoxRequired;
+using static NationalBank.BackEnd.Extensions.CheckBoxRequired;
 
-namespace AdithyaBank.BackEnd.Models
+namespace NationalBank.BackEnd.Models
 {
 
     public class ApplicationRegisterModel:BaseModel

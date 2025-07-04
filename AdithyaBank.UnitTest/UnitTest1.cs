@@ -1,10 +1,10 @@
-using AdithyaBank.BackEnd.Extensions;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
-using AdithyaBank.BackEnd.Repositories;
+using NationalBank.BackEnd.Extensions;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
+using NationalBank.BackEnd.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-namespace AdithyaBank.UnitTest
+namespace NationalBank.UnitTest
 {
     [TestClass]
     public class UnitTest1:BaseTest

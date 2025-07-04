@@ -1,4 +1,4 @@
-﻿using AdithyaBank.BackEnd.Extensions;
+﻿using NationalBank.BackEnd.Extensions;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace AdithyaBank.BackEnd.Repositories
+namespace NationalBank.BackEnd.Repositories
 {
     public class MusicPlayerRepository
     {

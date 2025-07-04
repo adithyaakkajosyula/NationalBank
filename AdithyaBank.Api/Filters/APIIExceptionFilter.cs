@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdithyaBank.Api.Filters
+namespace NationalBank.Api.Filters
 {
     public class APIIExceptionFilter : IExceptionFilter
     {

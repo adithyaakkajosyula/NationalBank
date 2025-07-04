@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AdithyaBank.BackEnd.Migrations.AdithyaBankIdentityDb
+namespace NationalBank.BackEnd.Migrations.NationalBankIdentityDb
 {
     public partial class CreatingIdentityScheme : Migration
     {

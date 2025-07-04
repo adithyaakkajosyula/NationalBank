@@ -1,4 +1,4 @@
-﻿using AdithyaBank.BackEnd.Entities;
+﻿using NationalBank.BackEnd.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.Extensions
+namespace NationalBank.BackEnd.Extensions
 {
     public static class EntityConfiguration
     {
-        public static void ConfigureAdithyaBankEntities(this ModelBuilder modelBuilder)
+        public static void ConfigureNationalBankEntities(this ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ApplicationRegister>().ToTable("ApplicationRegister");
             modelBuilder.Entity<ApplicationRegister>().Property(c => c.ApplicationName).IsRequired().HasColumnName("Application_name");

@@ -1,12 +1,12 @@
-﻿using AdithyaBank.BackEnd.Extensions;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.BackEnd.Extensions;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-namespace AdithyaBank.FrontEnd.Controllers
+namespace NationalBank.FrontEnd.Controllers
 {
     public class ApplicationController : BaseController
     {

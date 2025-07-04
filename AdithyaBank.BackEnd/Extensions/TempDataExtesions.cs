@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
 
-namespace AdithyaBank.BackEnd.Extensions
+namespace NationalBank.BackEnd.Extensions
 {
     public static class TempDataExtesions
     {

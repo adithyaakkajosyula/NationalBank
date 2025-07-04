@@ -1,13 +1,13 @@
-﻿using AdithyaBank.Api.Filters;
-using AdithyaBank.BackEnd.Authorization;
-using AdithyaBank.BackEnd.Extensions;
-using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.Api.Filters;
+using NationalBank.BackEnd.Authorization;
+using NationalBank.BackEnd.Extensions;
+using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace AdithyaBank.Api.Controllers
+namespace NationalBank.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

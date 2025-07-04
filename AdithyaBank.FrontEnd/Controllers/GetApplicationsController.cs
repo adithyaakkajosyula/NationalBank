@@ -1,9 +1,9 @@
-﻿using AdithyaBank.BackEnd.Authorization;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.BackEnd.Authorization;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdithyaBank.FrontEnd.Controllers
+namespace NationalBank.FrontEnd.Controllers
 {
     [CustomAuthorize]
     public class GetApplicationsController : BaseController

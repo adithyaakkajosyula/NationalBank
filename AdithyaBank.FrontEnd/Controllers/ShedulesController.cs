@@ -1,7 +1,7 @@
-﻿using AdithyaBank.BackEnd.Models;
+﻿using NationalBank.BackEnd.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdithyaBank.FrontEnd.Controllers
+namespace NationalBank.FrontEnd.Controllers
 {
     public class ShedulesController : Controller
     {

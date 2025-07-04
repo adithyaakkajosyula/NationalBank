@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Diagnostics;
 
-namespace AdithyaBank.Api.Filters
+namespace NationalBank.Api.Filters
 {
     public class APIIActionFilter : IActionFilter
     {

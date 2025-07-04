@@ -1,5 +1,5 @@
-﻿using AdithyaBank.BackEnd.Entities;
-using AdithyaBank.BackEnd.Extensions;
+﻿using NationalBank.BackEnd.Entities;
+using NationalBank.BackEnd.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace AdithyaBank.BackEnd.DataContext
+namespace NationalBank.BackEnd.DataContext
 {
-    public class AdithyaBankDatabaseContext : DbContext
+    public class NationalBankDatabaseContext : DbContext
     {
-        public AdithyaBankDatabaseContext(DbContextOptions<AdithyaBankDatabaseContext> options) : base(options)
+        public NationalBankDatabaseContext(DbContextOptions<NationalBankDatabaseContext> options) : base(options)
         {
 
         }
@@ -25,7 +25,7 @@ namespace AdithyaBank.BackEnd.DataContext
         public DbSet<Product> Product { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ConfigureAdithyaBankEntities();
+            modelBuilder.ConfigureNationalBankEntities();
             base.OnModelCreating(modelBuilder);
             
         }

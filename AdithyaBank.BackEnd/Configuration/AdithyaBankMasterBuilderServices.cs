@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.Configuration
+namespace NationalBank.BackEnd.Configuration
 {
-     class AdithyaBankMasterBuilderServices : IAdithyaBankMasterBuilderServices
+     class NationalBankMasterBuilderServices : INationalBankMasterBuilderServices
     {
         public IServiceCollection Services { get; }
-        public AdithyaBankMasterBuilderServices(IServiceCollection services) => Services = services ?? throw new ArgumentNullException(nameof(services));
+        public NationalBankMasterBuilderServices(IServiceCollection services) => Services = services ?? throw new ArgumentNullException(nameof(services));
     }
 }

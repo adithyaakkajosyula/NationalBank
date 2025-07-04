@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using AdithyaBank.BackEnd.Models;
+using NationalBank.BackEnd.Models;
 
-namespace AdithyaBank.Api.Filters
+namespace NationalBank.Api.Filters
 {
     public class APIIResultFilter : IResultFilter
     {

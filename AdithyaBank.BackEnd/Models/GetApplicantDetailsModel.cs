@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.Models
+namespace NationalBank.BackEnd.Models
 {
     public class GetApplicantDetailsModel : BaseModel
     {

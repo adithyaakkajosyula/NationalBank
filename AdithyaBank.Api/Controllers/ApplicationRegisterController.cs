@@ -1,13 +1,13 @@
-﻿using AdithyaBank.BackEnd.Authorization;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.BackEnd.Authorization;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.OpenApi.Extensions;
-using static AdithyaBank.BackEnd.Models.Enums;
+using static NationalBank.BackEnd.Models.Enums;
 
-namespace AdithyaBank.Api.Controllers
+namespace NationalBank.Api.Controllers
 {
     [CustomAuthorize]
     [Route("api/[controller]")]

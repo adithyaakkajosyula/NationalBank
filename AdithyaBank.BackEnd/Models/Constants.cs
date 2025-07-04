@@ -1,10 +1,10 @@
-﻿using AdithyaBank.BackEnd.Extensions;
+﻿using NationalBank.BackEnd.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace AdithyaBank.BackEnd.Models
+namespace NationalBank.BackEnd.Models
 {
     public class Constants
     {

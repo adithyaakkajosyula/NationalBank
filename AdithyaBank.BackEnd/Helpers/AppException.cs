@@ -1,4 +1,4 @@
-namespace AdithyaBank.BackEnd.Helpers;
+namespace NationalBank.BackEnd.Helpers;
 
 using System.Globalization;
 

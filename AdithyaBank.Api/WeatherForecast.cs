@@ -1,4 +1,4 @@
-namespace AdithyaBank.Api
+namespace NationalBank.Api
 {
     public class WeatherForecast
     {

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace AdithyaBank.BackEnd.Models
+namespace NationalBank.BackEnd.Models
 {
     public static class AlertExtensions
     {

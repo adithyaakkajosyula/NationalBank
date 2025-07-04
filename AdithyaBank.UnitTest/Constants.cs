@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.UnitTest
+namespace NationalBank.UnitTest
 {
     internal class Constants
     {

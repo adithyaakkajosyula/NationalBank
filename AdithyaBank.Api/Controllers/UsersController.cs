@@ -1,16 +1,16 @@
-namespace AdithyaBank.Api.Controllers;
+namespace NationalBank.Api.Controllers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AdithyaBank.BackEnd.Authorization;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.Repositories;
-using static AdithyaBank.BackEnd.Models.Enums;
-using AdithyaBank.BackEnd.Entities;
-using static AdithyaBank.BackEnd.Models.Constants;
+using NationalBank.BackEnd.Authorization;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.Repositories;
+using static NationalBank.BackEnd.Models.Enums;
+using NationalBank.BackEnd.Entities;
+using static NationalBank.BackEnd.Models.Constants;
 
 [CustomAuthorize]
 [ApiController]

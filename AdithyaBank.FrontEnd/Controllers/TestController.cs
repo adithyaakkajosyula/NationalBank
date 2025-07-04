@@ -1,7 +1,7 @@
-﻿using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdithyaBank.FrontEnd.Controllers
+namespace NationalBank.FrontEnd.Controllers
 {
     public class TestController : BaseController
     {

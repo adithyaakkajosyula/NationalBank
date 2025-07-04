@@ -1,11 +1,11 @@
-﻿using AdithyaBank.BackEnd.Entities;
+﻿using NationalBank.BackEnd.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.Entities
+namespace NationalBank.BackEnd.Entities
 {
     public class ApplicationRegister : BaseEntity
     {

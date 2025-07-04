@@ -1,4 +1,4 @@
-﻿namespace AdithyaBank.BackEnd
+﻿namespace NationalBank.BackEnd
 {
     public class Class1
     {

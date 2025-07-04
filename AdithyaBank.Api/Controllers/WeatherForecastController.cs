@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdithyaBank.Api.Controllers
+namespace NationalBank.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]

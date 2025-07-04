@@ -1,9 +1,9 @@
-﻿using AdithyaBank.BackEnd.Authorization;
-using AdithyaBank.BackEnd.DataContext;
-using AdithyaBank.BackEnd.Entities;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
-using AdithyaBank.BackEnd.Repositories;
+﻿using NationalBank.BackEnd.Authorization;
+using NationalBank.BackEnd.DataContext;
+using NationalBank.BackEnd.Entities;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
+using NationalBank.BackEnd.Repositories;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Microsoft.AspNetCore.Identity;
@@ -16,9 +16,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class AdithyaBankScreensBuilderServices
+    public static class NationalBankScreensBuilderServices
     {
-        public static IAdithyaBankMasterBuilderServices AddAdithyaBanksMasterServices(this IAdithyaBankMasterBuilderServices builder)
+        public static INationalBankMasterBuilderServices AddNationalBanksMasterServices(this INationalBankMasterBuilderServices builder)
         {
            // builder.Services.AddScoped<IApplicationRegisterRepository, ApplicationRegisterRepository>();
             builder.Services.AddScoped<IJwtUtils, JwtUtils>();

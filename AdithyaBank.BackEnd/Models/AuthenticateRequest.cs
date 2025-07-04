@@ -1,4 +1,4 @@
-namespace AdithyaBank.BackEnd.Models;
+namespace NationalBank.BackEnd.Models;
 
 using System.ComponentModel.DataAnnotations;
 

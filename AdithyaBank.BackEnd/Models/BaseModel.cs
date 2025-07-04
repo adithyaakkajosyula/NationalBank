@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AdithyaBank.BackEnd.Extensions;
+using NationalBank.BackEnd.Extensions;
 using Newtonsoft.Json;
-namespace AdithyaBank.BackEnd.Models
+namespace NationalBank.BackEnd.Models
 {
     public class BaseModel
     {

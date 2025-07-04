@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public interface IAdithyaBankMasterBuilderServices
+    public interface INationalBankMasterBuilderServices
     {
         IServiceCollection Services { get; }
     }

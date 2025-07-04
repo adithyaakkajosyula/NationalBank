@@ -11,7 +11,7 @@
     }
   },
   "profiles": {
-    "AdithyaBank.Api": {
+    "NationalBank.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

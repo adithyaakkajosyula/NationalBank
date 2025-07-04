@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AdithyaBank.BackEnd.Configuration;
+using NationalBank.BackEnd.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class AdithyaBankBuilderServicesExtensions
+    public static class NationalBankBuilderServicesExtensions
     {
-        public static IAdithyaBankMasterBuilderServices AddAdithyaBankMasterBuilderServices(this IServiceCollection services) => new AdithyaBankMasterBuilderServices(services);
-        public static IAdithyaBankMasterBuilderServices AddAdithyamainServices(this IServiceCollection services)
+        public static INationalBankMasterBuilderServices AddNationalBankMasterBuilderServices(this IServiceCollection services) => new NationalBankMasterBuilderServices(services);
+        public static INationalBankMasterBuilderServices AddAdithyamainServices(this IServiceCollection services)
         {
 
-            var builder = services.AddAdithyaBankMasterBuilderServices();
-            builder.AddAdithyaBanksMasterServices();
+            var builder = services.AddNationalBankMasterBuilderServices();
+            builder.AddNationalBanksMasterServices();
             return builder;
         }
     }

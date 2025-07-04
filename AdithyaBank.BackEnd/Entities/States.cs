@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.Entities
+namespace NationalBank.BackEnd.Entities
 {
     public class States:BaseEntity
     {

@@ -1,5 +1,5 @@
-﻿using AdithyaBank.BackEnd.Entities;
-using AdithyaBank.BackEnd.Extensions;
+﻿using NationalBank.BackEnd.Entities;
+using NationalBank.BackEnd.Extensions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,11 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.DataContext
+namespace NationalBank.BackEnd.DataContext
 {
-    public class AdithyaBankIdentityDbContext : IdentityDbContext<User>
+    public class NationalBankIdentityDbContext : IdentityDbContext<User>
     {
-        public AdithyaBankIdentityDbContext(DbContextOptions<AdithyaBankIdentityDbContext> options) : base(options)
+        public NationalBankIdentityDbContext(DbContextOptions<NationalBankIdentityDbContext> options) : base(options)
         {
 
         }

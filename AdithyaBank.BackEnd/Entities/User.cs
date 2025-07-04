@@ -1,9 +1,9 @@
-namespace AdithyaBank.BackEnd.Entities;
+namespace NationalBank.BackEnd.Entities;
 
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using static AdithyaBank.BackEnd.Models.Enums;
+using static NationalBank.BackEnd.Models.Enums;
 public class User : IdentityUser
 {
     public string RoleId { get; set; }

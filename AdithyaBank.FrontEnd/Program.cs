@@ -1,12 +1,12 @@
-using AdithyaBank.BackEnd.DataContext;
-using AdithyaBank.BackEnd.Models;
+using NationalBank.BackEnd.DataContext;
+using NationalBank.BackEnd.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using AdithyaBank.BackEnd.Entities;
+using NationalBank.BackEnd.Entities;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using AdithyaBank.BackEnd.Authorization;
+using NationalBank.BackEnd.Authorization;
 using Microsoft.AspNetCore.Builder;
 //https://code-maze.com/identity-asp-net-core-project/
 var builder = WebApplication.CreateBuilder(args);
@@ -15,13 +15,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
-builder.Services.AddDbContext<AdithyaBankIdentityDbContext>(options =>
+builder.Services.AddDbContext<NationalBankIdentityDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetSection("AppSettings:IdentityDatabaseConnectionString").Value);
 });
-builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<AdithyaBankIdentityDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<NationalBankIdentityDbContext>().AddDefaultTokenProviders();
 
-builder.Services.AddDbContext<AdithyaBankDatabaseContext>(options =>
+builder.Services.AddDbContext<NationalBankDatabaseContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetSection("AppSettings:DatabaseConnectionString").Value);
 });

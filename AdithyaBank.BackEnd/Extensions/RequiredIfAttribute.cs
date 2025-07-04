@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-namespace AdithyaBank.BackEnd.Extensions
+namespace NationalBank.BackEnd.Extensions
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class RequiredIfAttribute : ValidationAttribute, IClientModelValidator

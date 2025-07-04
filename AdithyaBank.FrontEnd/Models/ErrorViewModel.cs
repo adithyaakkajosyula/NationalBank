@@ -1,4 +1,4 @@
-namespace AdithyaBank.FrontEnd.Models
+namespace NationalBank.FrontEnd.Models
 {
     public class ErrorViewModel
     {

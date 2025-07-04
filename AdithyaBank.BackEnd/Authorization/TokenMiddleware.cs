@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-namespace AdithyaBank.BackEnd.Authorization
+namespace NationalBank.BackEnd.Authorization
 {
 
 

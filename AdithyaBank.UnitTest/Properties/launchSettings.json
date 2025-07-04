@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "AdithyaBank.UnitTest": {
+    "NationalBank.UnitTest": {
       "commandName": "Project",
       "jsWebView2Debugging": false,
       "sqlDebugging": false,

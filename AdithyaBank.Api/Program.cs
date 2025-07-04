@@ -1,25 +1,25 @@
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.DataContext;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using AdithyaBank.BackEnd.Helpers;
-using AdithyaBank.BackEnd.Authorization;
+using NationalBank.BackEnd.Helpers;
+using NationalBank.BackEnd.Authorization;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
-using AdithyaBank.BackEnd.Entities;
-using AdithyaBank.Api.Filters;
+using NationalBank.BackEnd.Entities;
+using NationalBank.Api.Filters;
 using Serilog;
 using System.Threading.RateLimiting;
-using AdithyaBank.BackEnd.Configuration;
+using NationalBank.BackEnd.Configuration;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
-using AdithyaBank.Api.Controllers;
+using NationalBank.Api.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -135,13 +135,13 @@ builder.Services.AddScoped<APIIActionFilter>();
 builder.Services.AddScoped<APIIExceptionFilter>();
 builder.Services.AddScoped<APIIResourceFilter>();
 builder.Services.AddScoped<APIIResultFilter>();
-builder.Services.AddDbContext<AdithyaBankIdentityDbContext>(options =>
+builder.Services.AddDbContext<NationalBankIdentityDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetSection("AppSettings:IdentityDatabaseConnectionString").Value);
 });
-builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<AdithyaBankIdentityDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<NationalBankIdentityDbContext>().AddDefaultTokenProviders();
 
-builder.Services.AddDbContext<AdithyaBankDatabaseContext>(options =>
+builder.Services.AddDbContext<NationalBankDatabaseContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetSection("AppSettings:DatabaseConnectionString").Value);
 });

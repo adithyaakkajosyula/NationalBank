@@ -1,7 +1,7 @@
 ﻿@using System.Security.Claims;
 @using Microsoft.AspNetCore.Identity
-@inject SignInManager<AdithyaBank.BackEnd.Entities.User> SignInManager
-@inject UserManager<AdithyaBank.BackEnd.Entities.User> UserManager
+@inject SignInManager<NationalBank.BackEnd.Entities.User> SignInManager
+@inject UserManager<NationalBank.BackEnd.Entities.User> UserManager
 @{
     // to get current user ID
 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

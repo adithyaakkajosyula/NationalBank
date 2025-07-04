@@ -1,6 +1,6 @@
-﻿using AdithyaBank.BackEnd.DataContext;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.BackEnd.DataContext;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,15 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static AdithyaBank.BackEnd.Models.Enums;
+using static NationalBank.BackEnd.Models.Enums;
 
-namespace AdithyaBank.BackEnd.Repositories
+namespace NationalBank.BackEnd.Repositories
 {
     public class CommonRepository:ICommonRepository
     {
         private readonly IDataProtector _protector;
-        private readonly AdithyaBankDatabaseContext _context;
-        public CommonRepository(AdithyaBankDatabaseContext context, IDataProtectionProvider provider)
+        private readonly NationalBankDatabaseContext _context;
+        public CommonRepository(NationalBankDatabaseContext context, IDataProtectionProvider provider)
         {
             _context = context;
             _protector = provider.CreateProtector(Constants.DataProtectionKey);

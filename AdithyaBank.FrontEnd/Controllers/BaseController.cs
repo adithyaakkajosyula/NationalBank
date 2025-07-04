@@ -1,8 +1,8 @@
-﻿using AdithyaBank.BackEnd.Models;
+﻿using NationalBank.BackEnd.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdithyaBank.FrontEnd.Controllers
+namespace NationalBank.FrontEnd.Controllers
 {
     [CustomAuthorize]
     public class BaseController : Controller

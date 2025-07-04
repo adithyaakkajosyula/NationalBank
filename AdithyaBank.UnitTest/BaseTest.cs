@@ -1,5 +1,5 @@
-﻿using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.DataContext;
+﻿using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.DataContext;
 using EntityFrameworkCore.UseRowNumberForPaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -8,21 +8,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AdithyaBank.BackEnd.RepoInterfaces;
-using AdithyaBank.BackEnd.Repositories;
+using NationalBank.BackEnd.RepoInterfaces;
+using NationalBank.BackEnd.Repositories;
 using Microsoft.AspNetCore.DataProtection;
 
-namespace AdithyaBank.UnitTest
+namespace NationalBank.UnitTest
 {
     public abstract class BaseTest
     {
-        protected internal readonly AdithyaBankDatabaseContext _context;
+        protected internal readonly NationalBankDatabaseContext _context;
         protected internal readonly IOptions<AppSettings> _appSettings;
         protected internal readonly ICommonRepository _commonRepository;
         protected internal readonly IDataProtector _protector;
         public BaseTest()
         {
-            var contextOptions = SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder<AdithyaBankDatabaseContext>(), Constants.ConnectionString, b => { b.UseRowNumberForPaging(); }).Options;
+            var contextOptions = SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder<NationalBankDatabaseContext>(), Constants.ConnectionString, b => { b.UseRowNumberForPaging(); }).Options;
             //ILoggerFactory logFactory = new LoggerFactory().AddDebug();
 
             //set app settings
@@ -34,7 +34,7 @@ namespace AdithyaBank.UnitTest
             });
 
             //set db context
-            _context = new AdithyaBankDatabaseContext(contextOptions);
+            _context = new NationalBankDatabaseContext(contextOptions);
             _commonRepository = new CommonRepository(_context,_protector);
         }
         public virtual void InitTest()

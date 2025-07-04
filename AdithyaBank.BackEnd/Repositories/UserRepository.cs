@@ -1,11 +1,11 @@
 
-namespace AdithyaBank.BackEnd.Repositories;
+namespace NationalBank.BackEnd.Repositories;
 
-using AdithyaBank.BackEnd.Authorization;
-using AdithyaBank.BackEnd.DataContext;
-using AdithyaBank.BackEnd.Entities;
-using AdithyaBank.BackEnd.Helpers;
-using AdithyaBank.BackEnd.Models;
+using NationalBank.BackEnd.Authorization;
+using NationalBank.BackEnd.DataContext;
+using NationalBank.BackEnd.Entities;
+using NationalBank.BackEnd.Helpers;
+using NationalBank.BackEnd.Models;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +21,12 @@ public interface IUserRepository
 
 public class UserRepository : IUserRepository
 {
-    private readonly AdithyaBankIdentityDbContext _context;
+    private readonly NationalBankIdentityDbContext _context;
     private IJwtUtils _jwtUtils;
     private readonly AppSettings _appSettings;
 
     public UserRepository(
-        AdithyaBankIdentityDbContext context,
+        NationalBankIdentityDbContext context,
         IJwtUtils jwtUtils,
         IOptions<AppSettings> appSettings)
     {

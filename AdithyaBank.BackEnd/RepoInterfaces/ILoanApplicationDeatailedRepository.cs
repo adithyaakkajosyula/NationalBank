@@ -1,11 +1,11 @@
-﻿using AdithyaBank.BackEnd.Models;
+﻿using NationalBank.BackEnd.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.RepoInterfaces
+namespace NationalBank.BackEnd.RepoInterfaces
 {
     public interface ILoanApplicationDeatailedRepository
     {

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace AdithyaBank.BackEnd.Extensions
+namespace NationalBank.BackEnd.Extensions
 {
     public class IdToStringConverter : JsonConverter
     {

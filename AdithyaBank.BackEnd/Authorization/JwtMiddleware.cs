@@ -1,7 +1,7 @@
-namespace AdithyaBank.BackEnd.Authorization;
+namespace NationalBank.BackEnd.Authorization;
 
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.Repositories;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;

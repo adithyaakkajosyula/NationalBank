@@ -1,9 +1,9 @@
 ﻿
 
-using AdithyaBank.BackEnd.Extensions;
+using NationalBank.BackEnd.Extensions;
 using System.ComponentModel.DataAnnotations;
 
-namespace AdithyaBank.BackEnd.Models
+namespace NationalBank.BackEnd.Models
 {
     public class Enums
     {

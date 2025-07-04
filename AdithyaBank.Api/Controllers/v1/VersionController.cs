@@ -1,7 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AdithyaBank.Api.Controllers.v1
+namespace NationalBank.Api.Controllers.v1
 {
     [ApiController]
     [ApiVersion("1.0")]

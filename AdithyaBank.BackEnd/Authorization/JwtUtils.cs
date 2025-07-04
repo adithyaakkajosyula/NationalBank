@@ -1,6 +1,6 @@
-namespace AdithyaBank.BackEnd.Authorization;
+namespace NationalBank.BackEnd.Authorization;
 
-using AdithyaBank.BackEnd.Models;
+using NationalBank.BackEnd.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

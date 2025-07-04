@@ -1,9 +1,9 @@
-namespace AdithyaBank.BackEnd.Models;
+namespace NationalBank.BackEnd.Models;
 
-using AdithyaBank.BackEnd.Entities;
+using NationalBank.BackEnd.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Text.Json.Serialization;
-using static AdithyaBank.BackEnd.Models.Enums;
+using static NationalBank.BackEnd.Models.Enums;
 
 public class UserModel : ApiBaseResultModel
 {

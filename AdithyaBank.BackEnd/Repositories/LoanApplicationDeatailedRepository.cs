@@ -1,7 +1,7 @@
-﻿using AdithyaBank.BackEnd.DataContext;
-using AdithyaBank.BackEnd.Entities;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.BackEnd.DataContext;
+using NationalBank.BackEnd.Entities;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,14 +13,14 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace AdithyaBank.BackEnd.Repositories
+namespace NationalBank.BackEnd.Repositories
 {
     public class LoanApplicationDeatailedRepository:ILoanApplicationDeatailedRepository
     {
-        private readonly AdithyaBankDatabaseContext _context;
+        private readonly NationalBankDatabaseContext _context;
         private readonly IOptions<AppSettings> _options;
         private readonly ICommonRepository _commonRepository;
-        public LoanApplicationDeatailedRepository(AdithyaBankDatabaseContext context,IOptions<AppSettings> options, ICommonRepository commonRepository)
+        public LoanApplicationDeatailedRepository(NationalBankDatabaseContext context,IOptions<AppSettings> options, ICommonRepository commonRepository)
         {
             _context = context; 
             _options = options; 

@@ -1,6 +1,6 @@
-﻿using AdithyaBank.BackEnd.Entities;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.Repositories;
+﻿using NationalBank.BackEnd.Entities;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +10,7 @@ using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.FrontEnd.Controllers
+namespace NationalBank.FrontEnd.Controllers
 {
 
     

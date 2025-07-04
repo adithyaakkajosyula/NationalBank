@@ -1,12 +1,12 @@
 ﻿@model AppriasalMenuTabModel
-@using AdithyaBank.BackEnd.Extensions;
-@using AdithyaBank.BackEnd.RepoInterfaces;
+@using NationalBank.BackEnd.Extensions;
+@using NationalBank.BackEnd.RepoInterfaces;
 @using Microsoft.AspNetCore.Mvc;
-@inject AdithyaBank.BackEnd.RepoInterfaces.ICommonRepository commonRepository;
+@inject NationalBank.BackEnd.RepoInterfaces.ICommonRepository commonRepository;
 
 @{
     Layout = null;
-   // var tabDisplayModel = TempData.Get<AdithyaBank.BackEnd.Models.ApplicationTabDisplayModel>("display");
+   // var tabDisplayModel = TempData.Get<NationalBank.BackEnd.Models.ApplicationTabDisplayModel>("display");
     long appraisalId = commonRepository.Decrypt<long>(Model.AppraisalId);
   //  var tobeHiddenAppraisalTabs = appraisalRepository.GetAppraisalHiddenTabs(appraisalId).GetAwaiter().GetResult();
 

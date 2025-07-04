@@ -1,7 +1,7 @@
-﻿using AdithyaBank.BackEnd.DataContext;
-using AdithyaBank.BackEnd.Entities;
-using AdithyaBank.BackEnd.Models;
-using AdithyaBank.BackEnd.RepoInterfaces;
+﻿using NationalBank.BackEnd.DataContext;
+using NationalBank.BackEnd.Entities;
+using NationalBank.BackEnd.Models;
+using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
@@ -11,15 +11,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AdithyaBank.BackEnd.Repositories
+namespace NationalBank.BackEnd.Repositories
 {
     public class ApplicationRegisterRepository:IApplicationRegisterRepository
     {
-        private readonly AdithyaBankDatabaseContext _context;
+        private readonly NationalBankDatabaseContext _context;
         private readonly IOptions<AppSettings> _appSettings;
         private readonly ICommonRepository _commonRepository;
 
-        public ApplicationRegisterRepository(AdithyaBankDatabaseContext context, IOptions<AppSettings> appSettings, ICommonRepository commonRepository)
+        public ApplicationRegisterRepository(NationalBankDatabaseContext context, IOptions<AppSettings> appSettings, ICommonRepository commonRepository)
         {
             _context = context;
             _appSettings = appSettings;
@@ -79,7 +79,7 @@ namespace AdithyaBank.BackEnd.Repositories
                 }
                 await  _context.SaveChangesAsync();
 
-                string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "AdithyaBanksDocuments", applicationregister.Id.ToString());
+                string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", applicationregister.Id.ToString());
 
                 if (!Directory.Exists(uploadsdocumentPath))
                 {
@@ -208,7 +208,7 @@ namespace AdithyaBank.BackEnd.Repositories
         public async Task<FileDownloadResult> ViewOrDownload(long id,long documentid)
         {
 
-            string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "AdithyaBanksDocuments", id.ToString());
+            string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", id.ToString());
 
             if (string.IsNullOrEmpty(uploadsdocumentPath) || !Directory.Exists(uploadsdocumentPath))
             {
@@ -275,7 +275,7 @@ namespace AdithyaBank.BackEnd.Repositories
         public async Task<FileDownloadWithByteArrayResult> ReadFileAsync(long id, long documentid)
         {
 
-            string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "AdithyaBanksDocuments", id.ToString());
+            string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", id.ToString());
 
             if (string.IsNullOrEmpty(uploadsdocumentPath) || !Directory.Exists(uploadsdocumentPath))
             {
@@ -383,7 +383,7 @@ namespace AdithyaBank.BackEnd.Repositories
                     var model = models[index];
                     if (model.DocumentFile !=null)
                     {
-                        string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "AdithyaBanksDocuments", applicationRegistersToAddOrUpdate[index].Id.ToString());
+                        string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", applicationRegistersToAddOrUpdate[index].Id.ToString());
 
                         if (!Directory.Exists(uploadsdocumentPath))
                         {
