@@ -3,6 +3,7 @@ using AdithyaBank.BackEnd.Authorization;
 using AdithyaBank.BackEnd.Extensions;
 using AdithyaBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -19,18 +20,37 @@ namespace AdithyaBank.Api.Controllers
             _commonRepository = commonRepository;
             _logger = logger;
         }
-
         [HttpGet("countries")]
         public async Task<IActionResult> GetCountries()
         {
-            await Task.Delay(30000);
-            var result = await _commonRepository.GetCountries();
-            if (result ==null)
-            {
+            var countries = await _commonRepository.GetCountries();
+            if (countries is null)
                 return NotFound("Internal Error");
-            }
 
-            return Ok(result);
+            // Return the raw list plus just two top‑level links
+            var response = new
+            {
+                data = countries,   // rename to “items” or “countries” if you prefer
+                links = new[]
+                {
+            new
+            {
+                rel    = "states",
+                href   = Url.Action(nameof(GetStates),    // GET /states
+                                    "ApiDataService"),
+                method = "GET"
+            },
+            new
+            {
+                rel    = "districts",
+                href   = Url.Action(nameof(GetDistricts), // GET /districts
+                                    "ApiDataService"),
+                method = "GET"
+            }
+        }
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("states")]
@@ -93,6 +113,10 @@ namespace AdithyaBank.Api.Controllers
         {
             return Ok("This is protected by age-based policy");
         }
+
+        [EnableQuery]                         // activates $filter/$orderby…
+        [HttpGet]                             // matches GET /odata/Employees
+        public IQueryable<Employee> Get() => GetEmployeesList().AsQueryable();
         private List<Employee> GetEmployeesList()
         {
             var employeeslist = new List<Employee>

@@ -15,6 +15,11 @@ using System.Threading.RateLimiting;
 using AdithyaBank.BackEnd.Configuration;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
+using AdithyaBank.Api.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +35,28 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 builder.Host.UseSerilog(); // Add Serilog to the pipeline
-builder.Services.AddControllers();
+
+// your EDM model
+// OData model
+IEdmModel GetEdmModel()
+{
+    var osv = new ODataConventionModelBuilder();
+    osv.EntitySet<Employee>("Employees");    // <-- entity set name
+    return osv.GetEdmModel();
+}
+
+builder.Services
+    .AddControllers()
+    .AddOData(opt => opt
+        .AddRouteComponents("odata", GetEdmModel()) 
+        .Select()
+        .Filter()
+        .OrderBy()
+        .Expand()
+        .Count()
+        .SetMaxTop(100)
+        .EnableQueryFeatures());                   
+
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
@@ -54,7 +80,11 @@ builder.Services
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//For OData
+builder.Services.AddSwaggerGen(o =>
+{
+    o.OperationFilter<ODataQueryOptionsOperationFilter>();
+});
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 builder.Services.AddOptions();
