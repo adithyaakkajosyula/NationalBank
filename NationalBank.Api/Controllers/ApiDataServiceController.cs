@@ -130,7 +130,8 @@ namespace NationalBank.Api.Controllers
                        new Employee(){Id= 3,Name= "Jagan",Age = 66,Sex = 'M',Dob =new DateTime(2018,05,02),Salary = 15000 , DepartmentId = 1 ,  Skills = new List<string> { "", "SQL" }  },
                        new Employee(){Id= 3,Name= "Dinesh",Age = 00,Sex = 'F',Dob =new DateTime(2017,05,02),Salary = 40000 ,DepartmentId = 2 ,  Skills = new List < string > { "C#", "SQL" }}
                 };
-            return employeeslist;
+
+                return employeeslist;
         }
 
     }
