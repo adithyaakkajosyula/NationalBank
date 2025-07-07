@@ -225,5 +225,48 @@ namespace NationalBank.BackEnd.Repositories
                     Message = "File uploaded successfully.",
                 };
         }
+
+        public async Task<FileDownloadResult> DownloadFile(string path)
+        {
+
+
+            if (!File.Exists(path))
+            {
+                return new FileDownloadResult() { IsSuccess = false, Message = "File not found." };
+            }
+            var contentType = GetContentType(path);
+
+            var memorystream = new MemoryStream();
+            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
+            {
+                await fs.CopyToAsync(memorystream);
+                memorystream.Position = 0;
+                return new FileDownloadResult()
+                {
+                    FileStream = memorystream,
+                    FileContent = contentType,
+                    FileName = $"{Path.GetFileName(path) + "." + Path.GetExtension(path).ToLowerInvariant()}",
+                    IsSuccess = true,
+                    Message = ""
+                };
+            }
+        }
+        public string GetContentType(string filePath)
+        {
+            // Logic to determine content type based on file content or extension
+            // For example, you can use libraries like MimeMapping.GetMimeMapping(filePath) to determine content type
+            // Or use a simple logic based on file extension
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+            switch (extension)
+            {
+                case ".pdf":
+                    return "application/pdf";
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+                default:
+                    return "application/octet-stream"; // Default content type for unknown files
+            }
+        }
     }
 }

@@ -136,6 +136,19 @@ namespace NationalBank.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("FileDownload")]
+        public async Task<ActionResult> FileDownload()
+        {
+            string path = Path.Combine(_options.Value.ImagesPath, "APiDataServiceUploads", "Report.pdf"); 
+            var filedownloadresult = await _commonRepository.DownloadFile(path);
+
+            if (filedownloadresult.IsSuccess == false)
+            {
+                return NotFound(filedownloadresult.Message ?? "File not found or download failed.");   
+            }
+
+            return File(filedownloadresult.FileStream,filedownloadresult.FileContent,filedownloadresult.FileName);
+        }
         private List<Employee> GetEmployeesList()
         {
             var employeeslist = new List<Employee>

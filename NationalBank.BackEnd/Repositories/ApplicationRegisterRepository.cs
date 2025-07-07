@@ -2,6 +2,7 @@
 using NationalBank.BackEnd.Entities;
 using NationalBank.BackEnd.Models;
 using NationalBank.BackEnd.RepoInterfaces;
+using NationalBank.BackEnd.Repositories; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
@@ -220,7 +221,7 @@ namespace NationalBank.BackEnd.Repositories
             if (files.Length == 1)
             {
                 string filePath = files[0];
-                var contentType = GetContentType(filePath);
+                var contentType = _commonRepository.GetContentType(filePath);
 
                 // Check if content type is null or empty
                 if (string.IsNullOrEmpty(contentType))
@@ -254,23 +255,7 @@ namespace NationalBank.BackEnd.Repositories
             }
            
         }
-        private string GetContentType(string filePath)
-        {
-            // Logic to determine content type based on file content or extension
-            // For example, you can use libraries like MimeMapping.GetMimeMapping(filePath) to determine content type
-            // Or use a simple logic based on file extension
-            string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            switch (extension)
-            {
-                case ".pdf":
-                    return "application/pdf";
-                case ".jpg":
-                case ".jpeg":
-                    return "image/jpeg";
-                default:
-                    return "application/octet-stream"; // Default content type for unknown files
-            }
-        }
+        
 
         public async Task<FileDownloadWithByteArrayResult> ReadFileAsync(long id, long documentid)
         {
@@ -287,7 +272,7 @@ namespace NationalBank.BackEnd.Repositories
             if (files.Length == 1)
             {
                 string filePath = files[0];
-                var contentType = GetContentType(filePath);
+                var contentType = _commonRepository.GetContentType(filePath);
 
                 // Check if content type is null or empty
                 if (string.IsNullOrEmpty(contentType))

@@ -22,5 +22,7 @@ namespace NationalBank.BackEnd.RepoInterfaces
         Task<IList<StatesModel>> GetStates();
         Task<IList<DistrictsModel>> GetDistricts();
         Task<BaseResultModel> UploadFile(IFormFile file, string path, CancellationToken ct = default);
+        Task<FileDownloadResult> DownloadFile(string path);
+        string GetContentType(string filePath);
     }
 }
