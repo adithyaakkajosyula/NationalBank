@@ -9,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static NationalBank.BackEnd.Models.Enums;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using static NationalBank.BackEnd.Models.Constants;
 
 namespace NationalBank.BackEnd.Repositories
 {
@@ -16,6 +19,7 @@ namespace NationalBank.BackEnd.Repositories
     {
         private readonly IDataProtector _protector;
         private readonly NationalBankDatabaseContext _context;
+        private const long MaxSize = 50L * 1024 * 1024;
         public CommonRepository(NationalBankDatabaseContext context, IDataProtectionProvider provider)
         {
             _context = context;
@@ -201,5 +205,25 @@ namespace NationalBank.BackEnd.Repositories
             return products;
         }
 
+        public async Task<BaseResultModel> UploadFile(IFormFile file,string path, CancellationToken ct = default)
+        {
+                if (file is null || file.Length == 0)
+                    new BaseResultModel() { Id = 0, IsSuccess = false, Message = "File is empty or null." };
+
+                if (file.Length > (long)MaxSizeLimit.MaxFileSize)
+                    new BaseResultModel() { Id = 0, IsSuccess = false, Message = $"Max {MaxSize / 1024 / 1024} MB allowed." };
+
+                using (FileStream fs = File.Open(path, FileMode.Create))
+                {
+                    await file.CopyToAsync(fs,ct);
+                }
+
+                return new BaseResultModel()
+                {
+                    Id = 0,
+                    IsSuccess = true,
+                    Message = "File uploaded successfully.",
+                };
+        }
     }
 }

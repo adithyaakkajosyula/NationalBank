@@ -5,6 +5,8 @@ using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Options;
+using NationalBank.BackEnd.Models;
 
 
 namespace NationalBank.Api.Controllers
@@ -13,12 +15,14 @@ namespace NationalBank.Api.Controllers
     [ApiController]
     public class ApiDataServiceController : ControllerBase
     {
-        private ICommonRepository _commonRepository;
+        private readonly ICommonRepository _commonRepository;
         private readonly ILogger<ApiDataServiceController> _logger;
-        public ApiDataServiceController(ICommonRepository commonRepository, ILogger<ApiDataServiceController> logger)
+        private readonly IOptions<AppSettings> _options;  
+        public ApiDataServiceController(ICommonRepository commonRepository, ILogger<ApiDataServiceController> logger,IOptions<AppSettings> options)
         {
             _commonRepository = commonRepository;
             _logger = logger;
+            _options = options; 
         }
         [HttpGet("countries")]
         public async Task<IActionResult> GetCountries()
@@ -117,6 +121,21 @@ namespace NationalBank.Api.Controllers
         [EnableQuery]                         // activates $filter/$orderby…
         [HttpGet]                             // matches GET /odata/Employees
         public IQueryable<Employee> Get() => GetEmployeesList().AsQueryable();
+
+        [DisableRequestSizeLimit]
+        [HttpPost("FileUpload")]
+        public async Task<ActionResult> FileUpload(IFormFile file)
+        {
+            string path = Path.Combine(_options.Value.ImagesPath,"APiDataServiceUploads");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            string filepath = Path.Combine(_options.Value.ImagesPath, "APiDataServiceUploads", $"{file.FileName}");
+            var result= await _commonRepository.UploadFile(file, filepath);
+            return Ok(result);
+        }
+
         private List<Employee> GetEmployeesList()
         {
             var employeeslist = new List<Employee>

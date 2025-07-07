@@ -1,4 +1,5 @@
-﻿using NationalBank.BackEnd.Models;
+﻿using Microsoft.AspNetCore.Http;
+using NationalBank.BackEnd.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace NationalBank.BackEnd.RepoInterfaces
         Task<IList<IdNameModel>> GetCountries();
         Task<IList<StatesModel>> GetStates();
         Task<IList<DistrictsModel>> GetDistricts();
+        Task<BaseResultModel> UploadFile(IFormFile file, string path, CancellationToken ct = default);
     }
 }

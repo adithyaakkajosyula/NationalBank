@@ -65,5 +65,10 @@ namespace NationalBank.BackEnd.Models
 
         }
 
-    }
+        public enum MaxSizeLimit
+        {
+            MaxFileSize = 10 * 1024 * 1024, // 10 MB
+            MaxFileCount = 5 // Maximum number of files allowed
+        };
+}
 }

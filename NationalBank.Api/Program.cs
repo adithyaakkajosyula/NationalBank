@@ -66,11 +66,13 @@ builder.Services
         options.DefaultApiVersion = new ApiVersion(1, 0);
         options.AssumeDefaultVersionWhenUnspecified = true;
         options.ReportApiVersions = true;
-        options.ApiVersionReader = ApiVersionReader.Combine(
+        /*options.ApiVersionReader = ApiVersionReader.Combine(
              new UrlSegmentApiVersionReader(),
-             new HeaderApiVersionReader("api-version"));
+             new HeaderApiVersionReader("api-version"));*/
         //options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
-       // options.ApiVersionReader = new HeaderApiVersionReader("api-version"); 
+        // options.ApiVersionReader = new HeaderApiVersionReader("api-version"); 
+
+        options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
     })
     .AddApiExplorer(options =>
     {
