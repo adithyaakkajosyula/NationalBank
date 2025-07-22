@@ -3,15 +3,16 @@ using NationalBank.BackEnd.Models;
 using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using static NationalBank.BackEnd.Models.Enums;
 using Microsoft.AspNetCore.Http;
-using System.IO;
 using static NationalBank.BackEnd.Models.Constants;
+using System.Net.Http;
+using STJ = System.Text.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.StaticFiles;
+
 
 namespace NationalBank.BackEnd.Repositories
 {
@@ -204,7 +205,6 @@ namespace NationalBank.BackEnd.Repositories
                  
             return products;
         }
-
         public async Task<BaseResultModel> UploadFile(IFormFile file,string path, CancellationToken ct = default)
         {
                 if (file is null || file.Length == 0)
@@ -225,7 +225,6 @@ namespace NationalBank.BackEnd.Repositories
                     Message = "File uploaded successfully.",
                 };
         }
-
         public async Task<FileDownloadResult> DownloadFile(string path)
         {
 
@@ -234,7 +233,9 @@ namespace NationalBank.BackEnd.Repositories
             {
                 return new FileDownloadResult() { IsSuccess = false, Message = "File not found." };
             }
-            var contentType = GetContentType(path);
+            //var contentType = GetContentType(path);
+            var provider = new FileExtensionContentTypeProvider();
+             var res =   provider.TryGetContentType(path, out string contentType);
 
             var memorystream = new MemoryStream();
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None))
@@ -268,5 +269,54 @@ namespace NationalBank.BackEnd.Repositories
                     return "application/octet-stream"; // Default content type for unknown files
             }
         }
+
+        private readonly string _karzaApiKey = ""; // Set your API key here
+
+        private static readonly STJ.JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+/*        public async Task<TResult?> GetAsync<TResult>(string uri)
+        {
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("x-karza-key", _karzaApiKey);
+
+            using var response = await client.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(((int)response.StatusCode).ToString());
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            return STJ.JsonSerializer.Deserialize<TResult>(json, _jsonOptions);
+        }
+
+        public async Task<TResult> PostAsync<TValue, TResult>(string uri, TValue value, string dateFormatString = "dd-MM-yyyy")
+        {
+            string requestJson = JsonConvert.SerializeObject(value, new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                DateFormatString = dateFormatString
+
+            });
+            var handler = new HttpClientHandler();
+            using (var client = new HttpClient(handler))
+            {
+                //client.Timeout= TimeSpan.FromMilliseconds(Timeout.Infinite);
+                client.DefaultRequestHeaders.Add("x-karza-key", _karzaApiKey);
+                var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
+                HttpResponseMessage httpResponseMessage = await client.PostAsync(uri, requestContent);
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    throw new Exception(Convert.ToInt32(httpResponseMessage.StatusCode).ToString());
+                }
+
+                HttpContent content = httpResponseMessage.Content;
+                //string str =await content.ReadAsStringAsync(); 
+                return await content.ReadAsAsync<TResult>();
+            }
+
+        }*/
     }
 }

@@ -137,7 +137,7 @@ namespace NationalBank.Api.Controllers
         }
 
         [HttpGet("FileDownload")]
-        public async Task<ActionResult> FileDownload()
+        public async Task<ActionResult<FileResult>> FileDownload()
         {
             string path = Path.Combine(_options.Value.ImagesPath, "APiDataServiceUploads", "Report.pdf"); 
             var filedownloadresult = await _commonRepository.DownloadFile(path);
@@ -146,7 +146,7 @@ namespace NationalBank.Api.Controllers
             {
                 return NotFound(filedownloadresult.Message ?? "File not found or download failed.");   
             }
-
+            //return file(filedownloadresult); // or return Ok(filedownloadresult); 
             return File(filedownloadresult.FileStream,filedownloadresult.FileContent,filedownloadresult.FileName);
         }
         private List<Employee> GetEmployeesList()
@@ -202,7 +202,15 @@ namespace NationalBank.Api.Controllers
         public long Phone { get; set; }
     }
 
-   
+    public class TestModel3:TestModel
+    {
+        public TestModel3()
+        {
+            string gg = Name;
+        }
+    }
 
-    
+
+
+
 }
