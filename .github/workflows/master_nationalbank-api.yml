@@ -1,64 +1,36 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - nationalbank-api
+name: Deploy ASP.NET Core API to Azure Web App
 
 on:
   push:
     branches:
-      - master
-  workflow_dispatch:
+      - master   # or main, depending on your default branch
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: windows-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup .NET
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: '6.0.x'  # Or your project's .NET version
 
       - name: Restore dependencies
-        run: dotnet restore src/NationalBank.API/NationalBank.API.csproj
+        run: dotnet restore NationalBank.Api/NationalBank.Api.csproj
 
       - name: Build
-        run: dotnet build src/NationalBank.API/NationalBank.API.csproj --configuration Release --no-restore
+        run: dotnet build NationalBank.Api/NationalBank.Api.csproj --configuration Release --no-restore
 
       - name: Publish
-        run: dotnet publish src/NationalBank.API/NationalBank.API.csproj -c Release -o published
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: api-app
-          path: published
-
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: api-app
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_CF1F80A6D1B34FB88D6F430EAD556590 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_960714553C38486DA6A3919A86FE91AC }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_097A22F4F8704566AC5BDDEA8D9A0A63 }}
+        run: dotnet publish NationalBank.Api/NationalBank.Api.csproj --configuration Release --output ./publish --no-build
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: 'nationalbank-api'
-          slot-name: 'Production'
-          package: '.'
+          app-name: nationalbank-api                # 🔁 your Azure Web App name
+          slot-name: Production
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: ./publish
