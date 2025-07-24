@@ -16,22 +16,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up .NET Core
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      - name: Build with dotnet
-        run: dotnet build src/NationalBank.API/NationalBank.API.csproj --configuration Release
+      - name: Restore dependencies
+        run: dotnet restore src/NationalBank.API/NationalBank.API.csproj
 
-      - name: Publish API project
-        run: dotnet publish src/NationalBank.API/NationalBank.API.csproj -c Release -o '${{ env.DOTNET_ROOT }}/myapp'
+      - name: Build
+        run: dotnet build src/NationalBank.API/NationalBank.API.csproj --configuration Release --no-restore
 
-      - name: Upload artifact for deployment job
+      - name: Publish
+        run: dotnet publish src/NationalBank.API/NationalBank.API.csproj -c Release -o published
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: '${{ env.DOTNET_ROOT }}/myapp'
+          name: api-app
+          path: published
 
   deploy:
     runs-on: windows-latest
@@ -41,10 +44,10 @@ jobs:
       contents: read
 
     steps:
-      - name: Download artifact from build job
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
+          name: api-app
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -54,9 +57,8 @@ jobs:
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_097A22F4F8704566AC5BDDEA8D9A0A63 }}
 
       - name: Deploy to Azure Web App
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'nationalbank-api'
           slot-name: 'Production'
-          package: '${{ github.workspace }}/.net-app'
+          package: '.'
