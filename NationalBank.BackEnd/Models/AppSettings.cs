@@ -25,6 +25,8 @@ namespace NationalBank.BackEnd.Models
         public JWT JWT { get; set; }
         public string AzureBlobConnectionString { get; set; }
         public string AzureBlobContainer { get; set; }
+        public string AzureLogConnectionString { get; set; }
+        public string AzureLogContainer { get; set; }
     }
     public class JWT
     {

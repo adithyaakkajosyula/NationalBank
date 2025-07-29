@@ -49,8 +49,8 @@ else
 {
     // Use Azure Blob in production
     loggerConfig.WriteTo.AzureBlobStorage(
-        connectionString: "DefaultEndpointsProtocol=https;AccountName=nationalbank;AccountKey=F5Q7h+Jo6Kg8MNsQXd+ZmqULeIqIJ5J45332d4kIXDT/EEp6U0dJAKnFkLKesztI7oGVAp30CCoL+AStL2MAgg==;EndpointSuffix=core.windows.net",
-        storageContainerName: "logs",
+        connectionString: builder.Configuration.GetSection("AppSettings:AzureLogConnectionString").Value,
+        storageContainerName: builder.Configuration.GetSection("AppSettings:AzureLogContainer").Value,
         storageFileName: "ApiLog.json",
         restrictedToMinimumLevel: LogEventLevel.Error
     );
