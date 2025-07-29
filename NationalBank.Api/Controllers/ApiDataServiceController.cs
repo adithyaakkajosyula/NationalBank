@@ -30,6 +30,14 @@ namespace NationalBank.Api.Controllers
             var countries = await _commonRepository.GetCountries();
             if (countries is null)
                 return NotFound("Internal Error");
+            return Ok(countries);
+        }
+        [HttpGet("countrieswithstateslink")]
+        public async Task<IActionResult> GetCountrieswithstateslink()
+        {
+            var countries = await _commonRepository.GetCountries();
+            if (countries is null)
+                return NotFound("Internal Error");
 
             // Return the raw list plus just two top‑level links
             var response = new

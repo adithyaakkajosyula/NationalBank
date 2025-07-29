@@ -20,21 +20,45 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using NationalBank.Api.Controllers;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Build configuration
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .Build();
 
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(configuration)
-    .CreateLogger();
+var env = builder.Environment;
 
-builder.Host.UseSerilog(); // Add Serilog to the pipeline
+var logFilePath = configuration["Serilog:WriteTo:0:Args:path"]; // Read path from config
+
+var loggerConfig = new LoggerConfiguration()
+    .MinimumLevel.Error()
+    .Enrich.FromLogContext();
+
+if (env.IsDevelopment())
+{
+    // Use file path from appsettings.json
+    loggerConfig.WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day);
+}
+else
+{
+    // Use Azure Blob in production
+    loggerConfig.WriteTo.AzureBlobStorage(
+        connectionString: "DefaultEndpointsProtocol=https;AccountName=nationalbank;AccountKey=F5Q7h+Jo6Kg8MNsQXd+ZmqULeIqIJ5J45332d4kIXDT/EEp6U0dJAKnFkLKesztI7oGVAp30CCoL+AStL2MAgg==;EndpointSuffix=core.windows.net",
+        storageContainerName: "logs",
+        storageFileName: "ApiLog.json",
+        restrictedToMinimumLevel: LogEventLevel.Error
+    );
+}
+
+Log.Logger = loggerConfig.CreateLogger();
+
+builder.Host.UseSerilog();
 
 // your EDM model
 // OData model
@@ -196,8 +220,8 @@ app.UseMiddleware<ErrorHandlerMiddleware>();
     Console.WriteLine("Response: LoggingMiddleware");
 });*/
 
-if (app.Environment.IsDevelopment())
-{
+/*if (app.Environment.IsDevelopment())
+{*/
     var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 
     app.UseSwagger();
@@ -212,10 +236,10 @@ if (app.Environment.IsDevelopment())
     });
 
     app.UseHttpsRedirection(); 
-}
+/*}*/
 app.UseRouting();
-app.UseRateLimiter();
 app.UseCors(MyAllowSpecificOrigins);
+app.UseRateLimiter();
 app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();

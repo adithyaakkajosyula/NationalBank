@@ -11,6 +11,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Azure.Storage.Blobs;
 
 namespace NationalBank.BackEnd.Repositories
 {
@@ -19,12 +22,13 @@ namespace NationalBank.BackEnd.Repositories
         private readonly NationalBankDatabaseContext _context;
         private readonly IOptions<AppSettings> _appSettings;
         private readonly ICommonRepository _commonRepository;
-
-        public ApplicationRegisterRepository(NationalBankDatabaseContext context, IOptions<AppSettings> appSettings, ICommonRepository commonRepository)
+        private readonly IWebHostEnvironment _env;
+        public ApplicationRegisterRepository(NationalBankDatabaseContext context, IOptions<AppSettings> appSettings, ICommonRepository commonRepository, IWebHostEnvironment env)
         {
             _context = context;
             _appSettings = appSettings;
             _commonRepository = commonRepository;
+            _env = env;
         }
 
         public async Task<BaseResultModel> ApplicationRegisterAdd(ApplicationRegisterModel model)
@@ -80,50 +84,72 @@ namespace NationalBank.BackEnd.Repositories
                 }
                 await  _context.SaveChangesAsync();
 
-                string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", applicationregister.Id.ToString());
-
-                if (!Directory.Exists(uploadsdocumentPath))
+                if (_env.IsDevelopment())
                 {
-                    Directory.CreateDirectory(uploadsdocumentPath);
-                }
+                    string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", applicationregister.Id.ToString());
 
-                if (model.DocumentFile != null)
-                {
-                    string panfilePath = "";
-                    if (model.DocumentFile.ContentType== "image/jpeg")
+                    if (!Directory.Exists(uploadsdocumentPath))
                     {
-                        // This is for list of document upload
-                        // panfilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ElementAt(0).ApplicationId}.jpg");
-                        panfilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ApplicationId}.jpg");
+                        Directory.CreateDirectory(uploadsdocumentPath);
                     }
-                    else
-                    {
-                        panfilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ApplicationId}.pdf");
-                    }
-                  
 
-                    if (model.Id>0)
+                    if (model.DocumentFile != null)
                     {
-                        // If File Exists in same path then nedd to delete file before overriding 
-                        string jpgFilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ApplicationId}.jpg");
-                        string pdfFilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ApplicationId}.pdf");
-                        if (File.Exists(jpgFilePath))
+                        string panfilePath = "";
+                        if (model.DocumentFile.ContentType == "image/jpeg")
                         {
-                            File.Delete(jpgFilePath);
+                            // This is for list of document upload
+                            // panfilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ElementAt(0).ApplicationId}.jpg");
+                            panfilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ApplicationId}.jpg");
                         }
-                        else if (File.Exists(pdfFilePath))
+                        else
                         {
-                            File.Delete(pdfFilePath);
+                            panfilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ApplicationId}.pdf");
                         }
 
-                    }
 
-                    using (var fileStream = new FileStream(panfilePath, FileMode.Create))
-                    {
-                        await model.DocumentFile.CopyToAsync(fileStream);
-                    }
+                        if (model.Id > 0)
+                        {
+                            // If File Exists in same path then nedd to delete file before overriding 
+                            string jpgFilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ApplicationId}.jpg");
+                            string pdfFilePath = Path.Combine(uploadsdocumentPath, $"{applicationregister.ApplicationDocumentUploads.ApplicationId}.pdf");
+                            if (File.Exists(jpgFilePath))
+                            {
+                                File.Delete(jpgFilePath);
+                            }
+                            else if (File.Exists(pdfFilePath))
+                            {
+                                File.Delete(pdfFilePath);
+                            }
 
+                        }
+
+                        using (var fileStream = new FileStream(panfilePath, FileMode.Create))
+                        {
+                            await model.DocumentFile.CopyToAsync(fileStream);
+                        }
+
+                    }
                 }
+                else
+                {
+                    // Save to Azure Blob
+                    var blobServiceClient = new BlobServiceClient(_appSettings.Value.AzureBlobConnectionString);
+                    var containerClient = blobServiceClient.GetBlobContainerClient(_appSettings.Value.AzureBlobContainer);
+
+                    await containerClient.CreateIfNotExistsAsync();
+
+                    string extension = model.DocumentFile.ContentType == "image/jpeg" ? ".jpg" : ".pdf";
+                    string blobName = $"{applicationregister.ApplicationDocumentUploads.ApplicationId}{extension}";
+                    var blobClient = containerClient.GetBlobClient(blobName);
+
+                    using (var stream = model.DocumentFile.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream, overwrite: true);
+                    }
+                }
+
+
 
                 return new BaseResultModel() { IsSuccess = true, Message = $"Saved SucessFully with Id {applicationregister.Id}" };
             }

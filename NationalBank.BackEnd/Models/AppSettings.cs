@@ -22,7 +22,9 @@ namespace NationalBank.BackEnd.Models
 
         public int ConnectionTimeout { get; set; }
 
-        public JWT JWT { get; set; }    
+        public JWT JWT { get; set; }
+        public string AzureBlobConnectionString { get; set; }
+        public string AzureBlobContainer { get; set; }
     }
     public class JWT
     {
