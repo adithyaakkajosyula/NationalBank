@@ -1,0 +1,36 @@
+name: Deploy ASP.NET Core API to Azure Web App
+
+on:
+  push:
+    branches:
+      - master   # or main, depending on your default branch
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'  # Or your project's .NET version
+
+      - name: Restore dependencies
+        run: dotnet restore NationalBank.Api/NationalBank.Api.csproj
+
+      - name: Build
+        run: dotnet build NationalBank.Api/NationalBank.Api.csproj --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish NationalBank.Api/NationalBank.Api.csproj --configuration Release --output ./publish --no-build
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: nationalbank-api                # 🔁 your Azure Web App name
+          slot-name: Production
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: ./publish
