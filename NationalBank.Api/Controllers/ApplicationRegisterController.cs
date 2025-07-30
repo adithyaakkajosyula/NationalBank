@@ -45,5 +45,18 @@ namespace NationalBank.Api.Controllers
             var applicationslist = await _applicationRegisterRepository.GetAppraisalsList();
             return Ok(applicationslist);
         }
+
+        [HttpGet("viewfile/{id}")]
+        public async Task<IActionResult> ViewFile(long id)
+        {
+            var result = await _applicationRegisterRepository.ViewOrDownload(id);
+
+            if (!result.IsSuccess || result.FileStream == null || string.IsNullOrEmpty(result.FileContent))
+            {
+                return NotFound(new { message = "Document not found." });
+            }
+
+            return File(result.FileStream, result.FileContent);
+        }
     }
 }

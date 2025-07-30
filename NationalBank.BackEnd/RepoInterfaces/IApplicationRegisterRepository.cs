@@ -13,7 +13,7 @@ namespace NationalBank.BackEnd.RepoInterfaces
         Task<IEnumerable<IdNameModel>> Getdata(string query);
         Task<GetApplicantDetailsModel> GetApplicantDetails(long applicantid);
         Task<List<ApplicationRegisterModel>> GetAppraisalsList();
-        Task<FileDownloadResult> ViewOrDownload(long id, long documentid);
+        Task<FileDownloadResult> ViewOrDownload(long id);
         Task<FileDownloadWithByteArrayResult> ReadFileAsync(long id, long documentid);
         Task<BaseResultModel> Saveappraisallist(List<ApplicationRegisterModel> models);
         Task<BaseResultModel> Deletefromappraisallist(long id);

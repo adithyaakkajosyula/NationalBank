@@ -97,7 +97,7 @@ namespace NationalBank.FrontEnd.Controllers
         }
         public async Task<IActionResult> ViewFile(long id, long documentId)
         {
-            var result = await _applicationRegisterRepository.ViewOrDownload(id,documentId);
+            var result = await _applicationRegisterRepository.ViewOrDownload(id);
             if (result.IsSuccess == false)
             {
                 return View("_NoDocument",result.Message);
@@ -106,7 +106,7 @@ namespace NationalBank.FrontEnd.Controllers
         }
         public async Task<IActionResult> DownLoadFile(long id, long documentId)
         {
-            var result = await _applicationRegisterRepository.ViewOrDownload(id, documentId);
+            var result = await _applicationRegisterRepository.ViewOrDownload(id);
             var contentType = "application/octet-stream";
             if (result.IsSuccess == false)
             {

@@ -64,6 +64,7 @@ namespace NationalBank.BackEnd.Repositories
                 applicationregister.ApplicationDistrictId = model.ApplicationDistrictId;
                 applicationregister.ApplicationIsAcceptedTermsandConditions = model.ApplicationIsAcceptedTermsAndConditions;
                 applicationregister.ApplicationAddress = model.ApplicationAddress;
+                //applicationregister.ApplicationAddress = $"{_env.IsDevelopment()}-{(model.DocumentFile == null ? "false":"true")}-{_appSettings.Value.AzureBlobConnectionString}-{_appSettings.Value.AzureBlobContainer}";
                 applicationregister.ApplicationHobbies = string.Join(",", model.ApplicationHobbies);
                 applicationregister.ApplicationRegisterdate = model.ApplicationRegisterDate;
                 applicationregister.ApplicationStatus = true;
@@ -133,20 +134,23 @@ namespace NationalBank.BackEnd.Repositories
                 }
                 else
                 {
-                    // Save to Azure Blob
-                    var blobServiceClient = new BlobServiceClient(_appSettings.Value.AzureBlobConnectionString);
-                    var containerClient = blobServiceClient.GetBlobContainerClient(_appSettings.Value.AzureBlobContainer);
-
-                    await containerClient.CreateIfNotExistsAsync();
-
-                    string extension = model.DocumentFile.ContentType == "image/jpeg" ? ".jpg" : ".pdf";
-                    string blobName = $"{applicationregister.ApplicationDocumentUploads.ApplicationId}{extension}";
-                    var blobClient = containerClient.GetBlobClient(blobName);
-
-                    using (var stream = model.DocumentFile.OpenReadStream())
+                    if (model.DocumentFile != null)
                     {
-                        await blobClient.UploadAsync(stream, overwrite: true);
-                    }
+                        // Save to Azure Blob
+                        var blobServiceClient = new BlobServiceClient(_appSettings.Value.AzureBlobConnectionString);
+                        var containerClient = blobServiceClient.GetBlobContainerClient(_appSettings.Value.AzureBlobContainer);
+
+                        await containerClient.CreateIfNotExistsAsync();
+
+                        string extension = model.DocumentFile.ContentType == "image/jpeg" ? ".jpg" : ".pdf";
+                        string blobName = $"{applicationregister.ApplicationDocumentUploads.ApplicationId}{extension}";
+                        var blobClient = containerClient.GetBlobClient(blobName);
+
+                        using (var stream = model.DocumentFile.OpenReadStream())
+                        {
+                            await blobClient.UploadAsync(stream, overwrite: true);
+                        }
+                    }                                        
                 }
 
 
@@ -171,7 +175,7 @@ namespace NationalBank.BackEnd.Repositories
         }
         public async Task<GetApplicantDetailsModel> GetApplicantDetails(long applicantid)
         {
-            var applicantdetails = await _context.ApplicationRegister.Where(b=>b.Id == applicantid && b.Rowstate<3)
+            var applicantdetails = await _context.ApplicationRegister.Include(a=> a.ApplicationDocumentUploads).Where(b=>b.Id == applicantid && b.Rowstate<3)
                 .Select(a => new GetApplicantDetailsModel()
                 {
                     Id = a.Id,
@@ -192,6 +196,7 @@ namespace NationalBank.BackEnd.Repositories
                     ApplicationStateId = a.ApplicationStateId,
                     ApplicationCountryId = a.ApplicationCountryId,  
                     ApplicationIsAcceptedTermsAndConditions = a.ApplicationIsAcceptedTermsandConditions,
+                    ApplicationDocumentTypeId = a.ApplicationDocumentUploads.DocumentTypeId
                 }).SingleOrDefaultAsync();
 
             return applicantdetails;    
@@ -232,7 +237,7 @@ namespace NationalBank.BackEnd.Repositories
             }).ToListAsync();
             return result;
         }
-        public async Task<FileDownloadResult> ViewOrDownload(long id,long documentid)
+        public async Task<FileDownloadResult> ViewOrDownload(long id)
         {
 
             string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", id.ToString());
@@ -263,7 +268,7 @@ namespace NationalBank.BackEnd.Repositories
                     {
                         FileStream = memoryStream,
                         FileContent = contentType,
-                        FileName = $"{id +"."+ Path.GetExtension(filePath).ToLowerInvariant()}",
+                        //FileName = $"{id +"."+ Path.GetExtension(filePath).ToLowerInvariant()}",
                         IsSuccess = true,
                         Message = ""
                     };

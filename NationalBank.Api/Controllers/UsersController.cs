@@ -14,7 +14,7 @@ using static NationalBank.BackEnd.Models.Constants;
 
 [CustomAuthorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
     private IUserRepository _userRepository;
