@@ -34,7 +34,7 @@ var configuration = new ConfigurationBuilder()
 
 var env = builder.Environment;
 
-var logFilePath = configuration["Serilog:WriteTo:0:Args:path"]; // Read path from config
+
 
 var loggerConfig = new LoggerConfiguration()
     .MinimumLevel.Error()
@@ -42,6 +42,7 @@ var loggerConfig = new LoggerConfiguration()
 
 if (env.IsDevelopment())
 {
+    var logFilePath = configuration["Serilog:WriteTo:0:Args:path"]; // Read path from config
     // Use file path from appsettings.json
     loggerConfig.WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day);
 }
@@ -163,13 +164,27 @@ builder.Services.AddScoped<APIIResourceFilter>();
 builder.Services.AddScoped<APIIResultFilter>();
 builder.Services.AddDbContext<NationalBankIdentityDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetSection("AppSettings:IdentityDatabaseConnectionString").Value);
+    options.UseSqlServer(builder.Configuration.GetSection("AppSettings:IdentityDatabaseConnectionString").Value,
+         sqlOptions =>
+         {
+             sqlOptions.EnableRetryOnFailure(
+                 maxRetryCount: 5,
+                 maxRetryDelay: TimeSpan.FromSeconds(10),
+                 errorNumbersToAdd: null);
+         });
 });
 builder.Services.AddIdentity<User, Role>().AddEntityFrameworkStores<NationalBankIdentityDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddDbContext<NationalBankDatabaseContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetSection("AppSettings:DatabaseConnectionString").Value);
+    options.UseSqlServer(builder.Configuration.GetSection("AppSettings:DatabaseConnectionString").Value
+        , sqlOptions =>
+        {
+            sqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        });
 });
 builder.Services.AddAdithyamainServices();
 builder.Services.AddAuthorization(options =>

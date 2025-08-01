@@ -44,10 +44,6 @@ namespace NationalBank.BackEnd.DataContext
                         entity.Rowstate = 3;
                         this.Entry(entity).State = EntityState.Modified;
                     }
-                    else
-                    {
-                        entity.Rowstate = Convert.ToByte(entry.State == EntityState.Added ? 1 : 2);
-                    }
                     entity.ModifiedOn = DateTime.Now;
                     entity.ModifiedBy = 1;
                 }

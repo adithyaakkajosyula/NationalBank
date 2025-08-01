@@ -46,6 +46,20 @@ namespace NationalBank.Api.Controllers
             return Ok(applicationslist);
         }
 
+        [HttpPut("Delete/{id}")]
+        public async Task<IActionResult> DeleteAppraisal(long id)
+        {
+            var result = await _applicationRegisterRepository.Deletefromappraisallist(id);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+
         [HttpGet("viewfile/{id}")]
         public async Task<IActionResult> ViewFile(long id)
         {
@@ -56,7 +70,7 @@ namespace NationalBank.Api.Controllers
                 return NotFound(new { message = "Document not found." });
             }
 
-            return File(result.FileStream, result.FileContent);
+            return File(result.FileStream, result.FileContent,result.FileName);
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Azure.Storage.Blobs;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NationalBank.BackEnd.Repositories
 {
@@ -45,7 +46,7 @@ namespace NationalBank.BackEnd.Repositories
                 }
                 if (applicationregister.ApplicationDocumentUploads == null)
                 {
-                    applicationregister.ApplicationDocumentUploads = model.ApplicationQualification == "SSC" ? new ApplicationDocumentUploads() : null;
+                    applicationregister.ApplicationDocumentUploads =  new ApplicationDocumentUploads();
 
                 }
                 applicationregister.Id = model.Id;  
@@ -77,11 +78,15 @@ namespace NationalBank.BackEnd.Repositories
 
                 if (model.Id == 0)
                 {
+                    applicationregister.Rowstate = 1;
+                    applicationregister.ApplicationDocumentUploads.Rowstate = 1;
                     await _context.ApplicationRegister.AddAsync(applicationregister);
                 }
                 else
                 {
-                     _context.ApplicationRegister.Update(applicationregister);
+                    applicationregister.Rowstate = 2;
+                    applicationregister.ApplicationDocumentUploads.Rowstate = 2;
+                    _context.ApplicationRegister.Update(applicationregister);
                 }
                 await  _context.SaveChangesAsync();
 
@@ -142,8 +147,22 @@ namespace NationalBank.BackEnd.Repositories
 
                         await containerClient.CreateIfNotExistsAsync();
 
+                        // Determine file extension
                         string extension = model.DocumentFile.ContentType == "image/jpeg" ? ".jpg" : ".pdf";
                         string blobName = $"{applicationregister.ApplicationDocumentUploads.ApplicationId}{extension}";
+                        string applicationIdPrefix = applicationregister.ApplicationDocumentUploads.ApplicationId.ToString();
+
+                        // 🔍 Delete all existing blobs that start with the same ApplicationId
+                        await foreach (var existingBlob in containerClient.GetBlobsAsync())
+                        {
+                            if (existingBlob.Name.StartsWith(applicationIdPrefix))
+                            {
+                                var existingBlobClient = containerClient.GetBlobClient(existingBlob.Name);
+                                await existingBlobClient.DeleteIfExistsAsync();
+                            }
+                        }
+
+                        // 💾 Upload the new blob
                         var blobClient = containerClient.GetBlobClient(blobName);
 
                         using (var stream = model.DocumentFile.OpenReadStream())
@@ -240,51 +259,88 @@ namespace NationalBank.BackEnd.Repositories
         public async Task<FileDownloadResult> ViewOrDownload(long id)
         {
 
-            string uploadsdocumentPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", id.ToString());
+            string[] supportedExtensions = new[] { ".jpg", ".pdf" };
 
-            if (string.IsNullOrEmpty(uploadsdocumentPath) || !Directory.Exists(uploadsdocumentPath))
+            if (_env.IsProduction())
             {
-                return new FileDownloadResult() { IsSuccess = false, Message = "File not found." };
-            }
+                // 🟦 Azure Blob Storage
+                var blobServiceClient = new BlobServiceClient(_appSettings.Value.AzureBlobConnectionString);
+                var containerClient = blobServiceClient.GetBlobContainerClient(_appSettings.Value.AzureBlobContainer);
 
-            string[] files = Directory.GetFiles(uploadsdocumentPath, id.ToString() + ".*");
+                await containerClient.CreateIfNotExistsAsync();
 
-            if (files.Length == 1)
-            {
-                string filePath = files[0];
-                var contentType = _commonRepository.GetContentType(filePath);
-
-                // Check if content type is null or empty
-                if (string.IsNullOrEmpty(contentType))
+                foreach (string extension in supportedExtensions)
                 {
-                    return new FileDownloadResult() { IsSuccess = false, Message = "File not found." };
-                }
-                var memoryStream = new MemoryStream();
-                using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    await fs.CopyToAsync(memoryStream);
-                    memoryStream.Position = 0;
-                    return new FileDownloadResult()
+                    string blobName = $"{id}{extension}";
+                    var blobClient = containerClient.GetBlobClient(blobName);
+
+                    if (await blobClient.ExistsAsync())
                     {
-                        FileStream = memoryStream,
-                        FileContent = contentType,
-                        //FileName = $"{id +"."+ Path.GetExtension(filePath).ToLowerInvariant()}",
-                        IsSuccess = true,
-                        Message = ""
-                    };
+                        var download = await blobClient.DownloadAsync();
+
+                        var memoryStream = new MemoryStream();
+                        await download.Value.Content.CopyToAsync(memoryStream);
+                        memoryStream.Position = 0;
+
+                        var contentType = _commonRepository.GetContentType(blobName);
+                        if (string.IsNullOrEmpty(contentType))
+                            contentType = "application/octet-stream";
+
+                        return new FileDownloadResult
+                        {
+                            FileStream = memoryStream,
+                            FileContent = contentType,
+                            FileName = $"download{extension}",
+                            IsSuccess = true,
+                            Message = ""
+                        };
+                    }
                 }
-            }
-            else if (files.Length > 1)
-            {
-                // Handle the case where multiple files are found
-                return new FileDownloadResult() { IsSuccess = false, Message = "File not found." };
+
+                return new FileDownloadResult { IsSuccess = false, Message = "File not found in Azure Blob." };
             }
             else
             {
-                // Handle the case where no file is found
-                return new FileDownloadResult() { IsSuccess = false, Message = "File not found." };
+                // 🟩 Local File System
+                string documentFolderPath = Path.Combine(_appSettings.Value.ImagesPath, "NationalBanksDocuments", id.ToString());
+
+                if (!Directory.Exists(documentFolderPath))
+                {
+                    return new FileDownloadResult { IsSuccess = false, Message = "Local file directory not found." };
+                }
+
+                string[] files = Directory.GetFiles(documentFolderPath, id.ToString() + ".*");
+
+                if (files.Length == 1)
+                {
+                    string filePath = files[0];
+                    var contentType = _commonRepository.GetContentType(filePath);
+
+                    if (string.IsNullOrEmpty(contentType))
+                        contentType = "application/octet-stream";
+
+                    var memoryStream = new MemoryStream();
+                    using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        await fs.CopyToAsync(memoryStream);
+                        memoryStream.Position = 0;
+                    }
+
+                    return new FileDownloadResult
+                    {
+                        FileStream = memoryStream,
+                        FileContent = contentType,
+                        IsSuccess = true,
+                        FileName = $"download{Path.GetExtension(filePath)}",
+                        Message = ""
+                    };
+                }
+                else
+                {
+                    return new FileDownloadResult { IsSuccess = false, Message = "Local file not found." };
+                }
             }
-           
+
         }
         
 
@@ -355,7 +411,7 @@ namespace NationalBank.BackEnd.Repositories
                     }
                     if (applicationregister.ApplicationDocumentUploads == null)
                     {
-                        applicationregister.ApplicationDocumentUploads = model.ApplicationQualification == "SSC" ? new ApplicationDocumentUploads() : null;
+                        applicationregister.ApplicationDocumentUploads =  new ApplicationDocumentUploads();
 
                     }
                     applicationregister.Id = model.Id;
@@ -461,8 +517,22 @@ namespace NationalBank.BackEnd.Repositories
                     {
                         applicationregister.Rowstate = 3;
                         applicationregister.ApplicationDocumentUploads.Rowstate = 3;
-                        _context.ApplicationRegister.Remove(applicationregister);
+                        _context.ApplicationRegister.Update(applicationregister);
                         await _context.SaveChangesAsync();
+
+                        var blobServiceClient = new BlobServiceClient(_appSettings.Value.AzureBlobConnectionString);
+                        var containerClient = blobServiceClient.GetBlobContainerClient(_appSettings.Value.AzureBlobContainer);
+                        string applicationIdPrefix = applicationregister.ApplicationDocumentUploads.ApplicationId.ToString();
+                        await containerClient.CreateIfNotExistsAsync();
+                        // 🔍 Delete all existing blobs that start with the same ApplicationId
+                        await foreach (var existingBlob in containerClient.GetBlobsAsync())
+                        {
+                            if (existingBlob.Name.StartsWith(applicationIdPrefix))
+                            {
+                                var existingBlobClient = containerClient.GetBlobClient(existingBlob.Name);
+                                await existingBlobClient.DeleteIfExistsAsync();
+                            }
+                        }
                         return new BaseResultModel() { IsSuccess = true, Message = "Appraisal Deleted Sucessfully" };
                     }
                     else
