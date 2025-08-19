@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NationalBank.BackEnd.DataContext;
 using NationalBank.BackEnd.Models;
 using NationalBank.BackEnd.RepoInterfaces;
