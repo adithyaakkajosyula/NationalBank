@@ -23,6 +23,7 @@ namespace NationalBank.BackEnd.DataContext
         public DbSet<States> States { get; set; }
         public DbSet<Districts> Districts { get; set; }
         public DbSet<Product> Product { get; set; }
+        public DbSet<Complaints> Complaints { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ConfigureNationalBankEntities();
