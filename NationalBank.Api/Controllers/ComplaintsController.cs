@@ -5,6 +5,7 @@ using NationalBank.BackEnd.RepoInterfaces;
 namespace NationalBank.Api.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class ComplaintsController : ControllerBase
     {
         public readonly IComplaintsRepository _complaintsRepository;
@@ -13,12 +14,13 @@ namespace NationalBank.Api.Controllers
         {
             _complaintsRepository = complaintsRepository;
         }
-        [HttpGet("complaints")]
-        public async Task<ActionResult<PagedResult<ComplaintsModel>>> GetComplaints(int pageNumber = 1, int pageSize = 10)
+        [HttpGet("GetComplaints")]
+        public async Task<IActionResult> GetComplaints(int pageNumber = 1, int pageSize = 10)
         {
-            var result = await _complaintsRepository.GetCommplaints(pageNumber, pageSize);  
-
-            return Ok(result);
+            await Task.Delay(3000);
+            var complaints = await _complaintsRepository.GetComplaints(pageNumber, pageSize);
+            return Ok(complaints);
         }
+
     }
 }

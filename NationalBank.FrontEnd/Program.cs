@@ -66,12 +66,7 @@ app.UseAuthentication();
 // if user is authenticated then user details is appended to http context Then we can use the user information 
 // for our requirement Like signed by xuser
 app.UseAuthorization();
-//app.UseWhen(context => !context.Request.Path.StartsWithSegments("/"), appBuilder => { app.UseMiddleware<TokenMiddleware>(); });
-//This done by api purpose That is without mvc design pattern or without identity services actually we get a token from front end http request 
-// that is verified here and add a bearer token to http request 
-app.UseMiddleware<TokenMiddleware>();
-// Here user will apend to http context by using id value in bearer token
-app.UseMiddleware<JwtMiddleware>();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

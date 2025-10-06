@@ -25,7 +25,8 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ICommonRepository,CommonRepository>();
             builder.Services.AddScoped<IApplicationRegisterRepository,ApplicationRegisterRepository>();
-            
+            builder.Services.AddScoped<IComplaintsRepository, ComplaintsRepository>();
+
             return builder;
         }
     }

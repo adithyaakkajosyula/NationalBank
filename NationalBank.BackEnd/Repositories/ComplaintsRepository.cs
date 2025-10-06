@@ -19,13 +19,9 @@ namespace NationalBank.BackEnd.Repositories
 
             _context = context;
         }
-        public async Task<PagedResult<ComplaintsModel>> GetCommplaints(int pageNumber,int pageSize)
+        public async Task<List<ComplaintsModel>> GetComplaints(int pageNumber, int pageSize)
         {
-            var query = _context.Complaints;
-
-            var totalCount = await query.CountAsync();
-
-            var complaints = await query
+            var complaints = await _context.Complaints
                 .OrderByDescending(c => c.Date)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
@@ -37,15 +33,14 @@ namespace NationalBank.BackEnd.Repositories
                     Description = a.Description,
                     Date = a.Date,
                     Status = a.Status,
-                    Priority = a.Priority,
+                    Priority = a.Priority
                 })
                 .ToListAsync();
 
-            return new PagedResult<ComplaintsModel>
-            {
-                Items = complaints,
-                TotalCount = totalCount
-            };
+            return complaints;
         }
+
+
+
     }
 }
