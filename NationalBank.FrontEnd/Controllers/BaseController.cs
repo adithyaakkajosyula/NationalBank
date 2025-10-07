@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace NationalBank.FrontEnd.Controllers
 {
-    [CustomAuthorize]
+    [Authorize]
     public class BaseController : Controller
     {
         protected internal BaseController WithSuccess(string Message)

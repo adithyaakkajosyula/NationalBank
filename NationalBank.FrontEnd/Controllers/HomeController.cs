@@ -8,6 +8,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using NationalBank.BackEnd.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NationalBank.FrontEnd.Controllers
 {
@@ -19,7 +20,7 @@ namespace NationalBank.FrontEnd.Controllers
         {
             _logger = logger;
         }
-        [CustomAuthorize]
+        [Authorize]
         public IActionResult Index()
         {
             var user = (UserModel)HttpContext.Items["User"];

@@ -46,58 +46,41 @@ namespace NationalBank.FrontEnd.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(AuthenticateRequest model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var appUser = await _userRepository.Authenticate(model);
-                if (appUser.IsSuccess == true)
-                { 
-                    
-                    // This is for without identity send cookie 
-                    /*     var claims = new List<Claim>{
-                         new Claim(ClaimTypes.Name, appUser.FirstName + " " + appUser.LastName),
-                         new Claim(ClaimTypes.Sid, appUser.Id),
-     };
-                         var identity = new ClaimsIdentity(
-                             claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                         var principal = new ClaimsPrincipal(identity);
-                         var props = new AuthenticationProperties();
-                         HttpContext.
-                         HttpContext.SignInAsync(
-                             CookieAuthenticationDefaults.AuthenticationScheme, principal, props).Wait();
-     */
+                return View(model);
+            }
 
+            // Step 1: Find user by username or email
+            var user = await userManager.FindByNameAsync(model.Username);
+            if (user == null)
+            {
+                ModelState.AddModelError(nameof(model.Username), "Login Failed: Invalid Username");
+                return View(model);
+            }
 
-                    User user = await userManager.FindByIdAsync(appUser.Id);
-                    await signInManager.SignOutAsync();
-                    Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, model.Password, false, false);
-                    if (result.Succeeded)
-                    {
-                        //To send toke as cokkie to browser after login susessfull
-                        var cookieOptions = new CookieOptions();
-                        cookieOptions.Expires = DateTime.Now.AddDays(1);
-                        cookieOptions.Path = "/";
-                        Response.Cookies.Append("LoginToken", appUser.Token, cookieOptions);
-                        return Redirect(model.ReturnUrl ?? "/");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(nameof(model.Password), "Login Failed: Invalid Password");
-                        return View(model); 
-                    }
+            // Step 2: Sign out any existing user sessions
+            await signInManager.SignOutAsync();
 
-                }
-                else
-                {
-                    ModelState.AddModelError(nameof(model.Username), "Login Failed: Invalid Username");
-                    return View(model);
-                }
+            // Step 3: Try to sign in with password
+            var result = await signInManager.PasswordSignInAsync(user, model.Password, isPersistent: false, lockoutOnFailure: false);
+
+            if (result.Succeeded)
+            {
+                return Redirect(model.ReturnUrl ?? "/");
+            }
+            else if (result.IsLockedOut)
+            {
+                ModelState.AddModelError("", "Account is locked out. Try again later.");
             }
             else
             {
-                ModelState.AddModelError(nameof(model.ReturnUrl), "Login Failed: Return Url is Required");
-                return View(model);
+                ModelState.AddModelError(nameof(model.Password), "Login Failed: Invalid Password");
             }
+
+            return View(model);
         }
+
         [AllowAnonymous]
         public async Task<IActionResult> Create()
         {

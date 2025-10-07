@@ -1,11 +1,12 @@
-﻿using NationalBank.BackEnd.Authorization;
+﻿
 using NationalBank.BackEnd.Models;
 using NationalBank.BackEnd.RepoInterfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NationalBank.FrontEnd.Controllers
 {
-    [CustomAuthorize]
+    [Authorize]
     public class GetApplicationsController : BaseController
     {
         private IApplicationRegisterRepository _applicationRegisterRepository;
