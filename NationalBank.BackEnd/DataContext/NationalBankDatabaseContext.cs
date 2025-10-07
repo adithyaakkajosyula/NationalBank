@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NationalBank.BackEnd.Models;
 
 
 namespace NationalBank.BackEnd.DataContext
@@ -24,6 +25,7 @@ namespace NationalBank.BackEnd.DataContext
         public DbSet<Districts> Districts { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Complaints> Complaints { get; set; }
+        public DbSet<ComplaintsModel> ComplaintsModel { get; set; } 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ConfigureNationalBankEntities();

@@ -1,0 +1,11 @@
+﻿@model IEnumerable<ComplaintsModel>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Category</td>
+        <td>@item.Description</td>
+        <td>@item.Status</td>
+        <td>@item.Date.ToString("dd-MMM-yyyy")</td>
+    </tr>
+}

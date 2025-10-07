@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NationalBank.BackEnd.Models;
 
 namespace NationalBank.BackEnd.Extensions
 {
@@ -116,6 +117,8 @@ namespace NationalBank.BackEnd.Extensions
                 .HasForeignKey(a => a.StateId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
             });
+
+            modelBuilder.Entity<ComplaintsModel>().HasNoKey();
         }
     }
 }

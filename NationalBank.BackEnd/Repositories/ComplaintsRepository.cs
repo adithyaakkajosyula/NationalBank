@@ -40,7 +40,12 @@ namespace NationalBank.BackEnd.Repositories
             return complaints;
         }
 
+        public async Task<List<ComplaintsModel>> GetComplaintsByStoredProcedure(int pageNumber, int pageSize)
+        {
+            var complaints = await _context.ComplaintsModel.FromSqlInterpolated($"exec getcomplaints {pageNumber},{pageSize}").ToListAsync();
 
+            return complaints;
+        }
 
     }
 }

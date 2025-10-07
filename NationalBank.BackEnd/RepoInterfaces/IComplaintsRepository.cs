@@ -10,5 +10,6 @@ namespace NationalBank.BackEnd.RepoInterfaces
     public interface IComplaintsRepository
     {
         Task<List<ComplaintsModel>> GetComplaints(int pageNumber, int pageSize);
+        Task<List<ComplaintsModel>> GetComplaintsByStoredProcedure(int pageNumber, int pageSize);
     }
 }
