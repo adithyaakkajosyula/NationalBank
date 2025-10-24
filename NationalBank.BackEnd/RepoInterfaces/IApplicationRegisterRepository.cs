@@ -17,5 +17,6 @@ namespace NationalBank.BackEnd.RepoInterfaces
         Task<FileDownloadWithByteArrayResult> ReadFileAsync(long id, long documentid);
         Task<BaseResultModel> Saveappraisallist(List<ApplicationRegisterModel> models);
         Task<BaseResultModel> Deletefromappraisallist(long id);
+        Task<BaseResultModel> UpdateAppraisal(long id, decimal amount);
     }
 }

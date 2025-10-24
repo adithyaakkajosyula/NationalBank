@@ -72,5 +72,20 @@ namespace NationalBank.Api.Controllers
 
             return File(result.FileStream, result.FileContent,result.FileName);
         }
+
+        [HttpPut("Update/{id}/{amount}")]
+        public async Task<IActionResult> UpdateAppraisal([FromRoute]long id,[FromRoute]decimal amount)
+
+        {
+            var result = await _applicationRegisterRepository.UpdateAppraisal(id,amount);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
     }
 }

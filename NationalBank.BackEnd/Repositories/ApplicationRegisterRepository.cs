@@ -552,6 +552,19 @@ namespace NationalBank.BackEnd.Repositories
             }
         }
               
-        
+        public async Task<BaseResultModel> UpdateAppraisal(long id, decimal amount)
+        {
+            var result = await _context.ApplicationRegister.FindAsync(id);
+
+            if (result == null)
+            {
+                return new BaseResultModel() {IsSuccess = false,Message = $"No Data Found for {id}" };
+            }
+            result.ApplicationRequestedAmount = amount;
+
+             _context.ApplicationRegister.Update(result);
+            await _context.SaveChangesAsync();
+            return new BaseResultModel() {IsSuccess = true,Message= "Updated" };
+        }
     }
 }
