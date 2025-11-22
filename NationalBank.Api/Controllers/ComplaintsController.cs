@@ -21,6 +21,12 @@ namespace NationalBank.Api.Controllers
             var complaints = await _complaintsRepository.GetComplaints(pageNumber, pageSize);
             return Ok(complaints);
         }
+        [HttpPost("AddComplaint")]
+        public async Task<IActionResult> AddComplaint(ComplaintsModel model)
+        {
+            var result = await _complaintsRepository.AddComplaint(model);
+            return Ok(result);                
+        }
 
     }
 }

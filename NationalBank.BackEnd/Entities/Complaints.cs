@@ -11,7 +11,7 @@ namespace NationalBank.BackEnd.Entities
         public long UserId { get; set; }
         public string Category { get; set; }
         public string Description { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
         public bool Status { get; set; }
         public string Priority { get; set; }
     }

@@ -11,5 +11,6 @@ namespace NationalBank.BackEnd.RepoInterfaces
     {
         Task<List<ComplaintsModel>> GetComplaints(int pageNumber, int pageSize);
         Task<List<ComplaintsModel>> GetComplaintsByStoredProcedure(int pageNumber, int pageSize);
+        Task<BaseResultModel> AddComplaint(ComplaintsModel model);
     }
 }

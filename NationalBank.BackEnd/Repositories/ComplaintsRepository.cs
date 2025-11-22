@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NationalBank.BackEnd.DataContext;
+using NationalBank.BackEnd.Entities;
 using NationalBank.BackEnd.Models;
 using NationalBank.BackEnd.RepoInterfaces;
 using System;
@@ -31,7 +32,6 @@ namespace NationalBank.BackEnd.Repositories
                     UserId = a.UserId,
                     Category = a.Category,
                     Description = a.Description,
-                    Date = a.Date,
                     Status = a.Status,
                     Priority = a.Priority
                 })
@@ -46,6 +46,33 @@ namespace NationalBank.BackEnd.Repositories
 
             return complaints;
         }
+        public async Task<BaseResultModel> AddComplaint(ComplaintsModel model)
+        {
+            var result = await _context.Complaints.FindAsync(model.Id);
+            if (result == null) 
+            {
+                result = new Complaints();
 
+                result.UserId = 1;
+                result.Category = model.Category;   
+                result.Description = model.Description;
+                result.Priority = model.Priority;
+                
+            }
+
+            if (result.Id == 0)
+            {
+                result.Rowstate = 1;
+                await _context.Complaints.AddAsync(result);      
+            }
+            else
+            {
+                result.Rowstate = 2;
+                _context.Complaints.Update(result); 
+            }
+            await _context.SaveChangesAsync();
+
+            return new BaseResultModel() { IsSuccess = true , Message = "Saved SucessFully"}; 
+        }
     }
 }
